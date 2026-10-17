@@ -4,9 +4,10 @@ An NLP research discovery engine that maps agreement, disagreement, and conditio
 
 > **Status:** early foundation. Repository architecture, configuration, testing,
 > corpus ingestion/validation, semantic retrieval, baseline candidate-claim
-> extraction, pairwise NLI relationship estimation, and experimental-condition
-> analysis are in place. Evidence graphs, network ingestion from live
-> sources, and the UI are not implemented yet.
+> extraction, pairwise NLI relationship estimation, experimental-condition
+> analysis, and evidence attribution/traceability are in place. Evidence
+> graphs, network ingestion from live sources, and the UI are not implemented
+> yet.
 
 ## Requirements
 
@@ -338,6 +339,92 @@ disagreement. `missing` always means "not stated in the text", never "the
 studies differ". Treat all condition output as auditable context for human
 interpretation, not as an automated verdict.
 
+## Evidence attribution & traceability
+
+`paperdna.evidence` links every predicted relationship to the exact source
+sentences behind it, keeping **observed evidence** and **model
+interpretation** strictly separate.
+
+```python
+from paperdna.evidence import build_attribution, attribution_to_dict
+
+attribution = build_attribution(
+    premise_claim, hypothesis_claim,          # CandidateClaim objects
+    records=ingestion_result.papers,          # enables URL/title + verification
+    classification=classification,            # PairClassification, embedded unchanged
+    conditions=comparison,                    # optional ConditionComparison
+)
+print(attribution.premise.verification)       # "verified"
+print(attribution.premise.paper.url)          # or None — never fabricated
+print(attribution.interpretation.label)       # model output, not observed text
+```
+
+### How to trace an output back to its source
+
+1. Take `attribution.premise.claim.claim_id` — a stable reference of the
+   form `"{source}:{source_id}:{start}-{end}"`.
+2. `source` + `source_id` identify the paper; `attribution.premise.paper`
+   carries its `title`, `url`, `doi`, and `published` **when the source
+   provided them** (`None` otherwise — missing metadata is never invented).
+3. `start`/`end` are character offsets into that paper's abstract, so
+   `abstract[claim.start:claim.end] == sentence` holds for verified
+   evidence — the reader can re-check any quote against the original text.
+4. `attribution_to_dict(...)` produces a JSON-safe dict (exact round-trip
+   via `attribution_from_dict`) for storage or display.
+
+### Verification statuses
+
+| Status              | Meaning                                                                    |
+| ------------------- | -------------------------------------------------------------------------- |
+| `verified`          | Abstract available; `abstract[start:end] == sentence` checked              |
+| `verified_by_search`| Offsets **inferred** from a unique sentence occurrence (classification-only path) |
+| `unverified`        | Sentence verbatim, but no abstract to check (record missing, or the sentence occurs multiple times) — reason stated |
+| `unavailable`       | No usable evidence text (e.g. empty sentence) — clearly indicated, never fabricated |
+
+`unverified`/`unavailable` evidence always carries an
+`unavailable_reason`. Structurally invalid offsets, spans that fail
+verification against a *known* abstract, and source-identity mismatches
+between claims and the classification passed alongside them are
+**rejected** (`InvalidSpanError`, `AttributionMismatchError`) rather than
+silently accepted.
+
+The classification-only path (`attribute_from_classification`) covers the
+case where the original `CandidateClaim` objects are gone: sentences come
+verbatim from the `PairClassification`, and offsets are inferred only on a
+unique abstract occurrence — repeated sentences leave offsets `None`
+(claim ID suffix `unknown`) instead of guessing.
+
+```python
+from paperdna.evidence import attribute_from_classification
+
+attribution = attribute_from_classification(classification, records=records)
+```
+
+### Observed vs. model-generated
+
+`SentenceEvidence` holds only copied source text and metadata.
+`RelationInterpretation` (label, scores, confidence, condition summary,
+notes) is typed separately and documented as model output — an NLI
+prediction or condition difference is **never** represented as an observed
+scientific fact, and conditions never rewrite the NLI label. The original
+`PairClassification` is embedded unchanged.
+
+### Limitations
+
+Traceability here is *textual identity*, not scientific grounding:
+verification proves a sentence came from the abstract it was extracted
+from, not that the sentence is true or correctly interpreted. A
+`PairClassification` on its own carries no offsets, so the
+classification-only path can verify only by searching the abstract, and
+infers offsets solely on a unique occurrence. Claim IDs are deterministic
+but tied to the current claim extractor's segmentation — a future change
+to segmentation would change IDs. If a source revises an abstract after
+extraction, verification fails loudly rather than silently passing.
+URL/DOI/title availability depends entirely on upstream metadata. The
+rule-based extraction feeding this stage remains heuristic (see claim
+extraction limitations); attribution makes its outputs auditable, it does
+not upgrade their quality.
+
 ## Project layout
 
 ```
@@ -347,7 +434,8 @@ src/paperdna/retrieval/ Embedding interface, cosine similarity, search index, ev
 src/paperdna/claims/    Candidate claim extraction (segmentation, cue rules)
 src/paperdna/nli/       Pairwise claim-relationship classification (NLI)
 src/paperdna/conditions/ Experimental-condition extraction and comparison
-tests/                  Pytest test suite (smoke, corpus, retrieval, claims, nli, conditions tests)
+src/paperdna/evidence/   Evidence attribution and sentence traceability
+tests/                  Pytest test suite (smoke, corpus, retrieval, claims, nli, conditions, evidence tests)
 tests/fixtures/         Local offline test fixtures
 pyproject.toml          Project metadata, dependencies, and tool config
 .env.example            Example environment configuration
