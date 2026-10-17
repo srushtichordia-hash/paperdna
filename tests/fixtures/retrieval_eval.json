@@ -1,0 +1,38 @@
+{
+  "_comment": "Hand-labeled sanity-check dataset for retrieval ranking. Small and subjective; useful for catching regressions, NOT evidence of scientific model quality.",
+  "papers": [
+    {
+      "id": "arxiv:2101.00001",
+      "title": "Sparse Attention Mechanisms for Long Documents",
+      "abstract": "We study sparse attention mechanisms for modeling long scientific documents and report accuracy and speed trade-offs."
+    },
+    {
+      "id": "fixture:p002",
+      "title": "Gradient Stabilization in Deep Networks",
+      "abstract": "A study of gradient stabilization techniques."
+    },
+    {
+      "id": "fixture:p003",
+      "title": "Benchmarking Retrieval Augmented Generation",
+      "abstract": "We benchmark retrieval augmented generation pipelines across domains."
+    }
+  ],
+  "queries": [
+    {
+      "query": "sparse attention for long sequences",
+      "relevant": ["arxiv:2101.00001"]
+    },
+    {
+      "query": "stabilizing gradients in deep networks",
+      "relevant": ["fixture:p002"]
+    },
+    {
+      "query": "evaluating retrieval augmented generation systems",
+      "relevant": ["fixture:p003"]
+    },
+    {
+      "query": "attention mechanisms",
+      "relevant": ["arxiv:2101.00001"]
+    }
+  ]
+}
