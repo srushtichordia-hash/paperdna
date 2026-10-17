@@ -1,0 +1,49 @@
+{
+  "_comment": "Hand-labeled sanity-check dataset for candidate claim extraction. Labels are per-sentence, positional, and subjective; useful for catching regressions, NOT evidence of scientific model quality or of understanding scientific truth.",
+  "abstracts": [
+    {
+      "source": "fixture",
+      "source_id": "c001",
+      "abstract": "Deep learning has transformed computer vision. Previous studies relied on hand-crafted features. We find that sparse attention improves long-document classification by 4.2%. Our results suggest that the gains may diminish with shorter inputs. We trained all models on a public dataset.",
+      "sentences": [
+        {"label": "other"},
+        {"label": "background"},
+        {"label": "claim", "cue_contains": "find", "hedges": []},
+        {"label": "claim", "cue_contains": "suggest", "hedges": ["may", "suggest"]},
+        {"label": "methods"}
+      ]
+    },
+    {
+      "source": "fixture",
+      "source_id": "c002",
+      "abstract": "Transformer models are widely used in NLP (e.g., for machine translation). The effect of model size on efficiency remains poorly understood. Our analysis indicates that doubling parameter count may increase inference cost superlinearly. These findings are consistent with prior scaling work.",
+      "sentences": [
+        {"label": "other"},
+        {"label": "other"},
+        {"label": "claim", "cue_contains": "analysis", "hedges": ["may"]},
+        {"label": "other"}
+      ]
+    },
+    {
+      "source": "fixture",
+      "source_id": "c003",
+      "abstract": "Is attention all you need for medical summarization? We show that a compact model matches specialist performance on 3 of 4 benchmarks (see Fig. 2). No significant difference was observed between groups.",
+      "sentences": [
+        {"label": "other"},
+        {"label": "claim", "cue_contains": "show", "hedges": []},
+        {"label": "other"}
+      ]
+    },
+    {
+      "source": "fixture",
+      "source_id": "c004",
+      "abstract": "Rapid growth in compute demand has raised environmental concerns. Methods such as model pruning reduce compute requirements. First, we collect benchmark results. The implementation uses standard transformers.",
+      "sentences": [
+        {"label": "other"},
+        {"label": "methods"},
+        {"label": "methods"},
+        {"label": "methods"}
+      ]
+    }
+  ]
+}
