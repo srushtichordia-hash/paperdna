@@ -1,0 +1,41 @@
+{
+  "_comment": "Hand-labeled sanity-check pairs for condition analysis. Synthetic text; expected_statuses reflect what the deterministic rule baseline should produce, NOT scientific truth or model quality.",
+  "pairs": [
+    {
+      "name": "matching_dataset_and_metric",
+      "premise": {"source": "arxiv", "source_id": "c1", "sentence": "We find that our model achieves 91.2% accuracy on the GLUE benchmark."},
+      "hypothesis": {"source": "fixture", "source_id": "c2", "sentence": "The transformer model reaches 90.1% accuracy on the GLUE benchmark."},
+      "expected_statuses": {"dataset": "matching", "population": "missing", "model": "uncertain", "metric": "matching", "setting": "missing", "design": "missing"}
+    },
+    {
+      "name": "conflicting_dataset_and_metric",
+      "premise": {"source": "arxiv", "source_id": "c3", "sentence": "We show that the BERT classifier improves F1 score on the SQuAD corpus."},
+      "hypothesis": {"source": "fixture", "source_id": "c4", "sentence": "Our method achieves higher accuracy on the ImageNet dataset."},
+      "expected_statuses": {"dataset": "differing", "population": "missing", "model": "uncertain", "metric": "differing", "setting": "missing", "design": "missing"}
+    },
+    {
+      "name": "missing_population_is_not_differing",
+      "premise": {"source": "arxiv", "source_id": "c5", "sentence": "We find that treatment reduces mortality in 200 patients."},
+      "hypothesis": {"source": "fixture", "source_id": "c6", "sentence": "The intervention lowers mortality in the trial cohort."},
+      "expected_statuses": {"dataset": "missing", "population": "missing", "model": "missing", "metric": "missing", "setting": "missing", "design": "missing"}
+    },
+    {
+      "name": "ambiguous_wording",
+      "premise": {"source": "arxiv", "source_id": "c7", "sentence": "We find that our approach improves performance on various benchmarks."},
+      "hypothesis": {"source": "fixture", "source_id": "c8", "sentence": "The method performs better on the standard benchmark."},
+      "expected_statuses": {"dataset": "uncertain", "population": "missing", "model": "uncertain", "metric": "missing", "setting": "missing", "design": "missing"}
+    },
+    {
+      "name": "incomplete_claim_side",
+      "premise": {"source": "arxiv", "source_id": "c9", "sentence": ""},
+      "hypothesis": {"source": "fixture", "source_id": "c10", "sentence": "We find that accuracy improves on the GLUE benchmark."},
+      "expected_statuses": {"dataset": "missing", "population": "missing", "model": "missing", "metric": "missing", "setting": "missing", "design": "missing"}
+    },
+    {
+      "name": "matching_design_setting_metric",
+      "premise": {"source": "arxiv", "source_id": "c11", "sentence": "In a randomized controlled trial, our model improved F1 in a low-resource setting."},
+      "hypothesis": {"source": "fixture", "source_id": "c12", "sentence": "A randomized controlled trial found the transformer model gains F1 in a low-resource setting."},
+      "expected_statuses": {"dataset": "missing", "population": "missing", "model": "uncertain", "metric": "matching", "setting": "matching", "design": "matching"}
+    }
+  ]
+}
