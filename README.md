@@ -33,6 +33,14 @@ pip install -e ".[dev]"
 This installs PaperDNA with no runtime dependencies; `pytest` is the only
 development dependency.
 
+To use real embedding models for semantic retrieval, install the optional
+`embed` extra (this pulls in PyTorch and sentence-transformers, several
+hundred MB):
+
+```bash
+pip install -e ".[embed]"
+```
+
 ## Running the tests
 
 ```bash
@@ -111,12 +119,69 @@ export PAPERDNA_LOG_LEVEL=DEBUG
 See [`.env.example`](.env.example) for a documented template. Never commit real
 secrets; `.env` files are gitignored.
 
+## Semantic retrieval
+
+`paperdna.retrieval` embeds paper records and retrieves the most similar
+ones for a query, using cosine similarity.
+
+- **Model:** [`sentence-transformers/all-MiniLM-L6-v2`](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2)
+  (Apache-2.0 license, 384 dimensions, ~90 MB). Selected as a strong
+  quality/speed trade-off for titles and abstracts.
+- **Optional dependency:** the core package and the default test suite work
+  without PyTorch or sentence-transformers. The `SentenceTransformerEmbedder`
+  loads the model only when explicitly instantiated — never at import time.
+- **First run:** instantiating `SentenceTransformerEmbedder` downloads the
+  model from Hugging Face (~90 MB) into the local HF cache
+  (`~/.cache/huggingface`); later runs are offline.
+- **Embedding text format:** `"{title}\n\n{abstract}"` (stable and
+  documented in `paperdna.retrieval.preprocess`).
+- **Identity & duplicates:** papers are identified by
+  `(source.casefold(), source_id)`; duplicates at index build are dropped
+  (first occurrence kept, count reported in `index.stats`), and records are
+  never mutated.
+- **Invalid vectors** (wrong dimension, NaN/inf, zero norm) raise
+  `InvalidVectorError`; ties in ranking are broken deterministically by
+  corpus order.
+
+```python
+from paperdna.corpus import ingest_records, load_jsonl
+from paperdna.retrieval import PaperIndex, SentenceTransformerEmbedder
+
+result = ingest_records(load_jsonl("tests/fixtures/sample_corpus.jsonl"))
+index = PaperIndex.build(result.papers, SentenceTransformerEmbedder())
+for hit in index.search("sparse attention for long documents", top_k=3):
+    print(f"{hit.score:.3f}  {hit.record.source}:{hit.record.source_id}  {hit.record.title}")
+```
+
+### Retrieval evaluation
+
+`paperdna.retrieval.eval` provides `precision_at_k` / `recall_at_k` with
+documented conventions (positive `k` required; fewer-than-`k` retrieved
+divides by `k`; empty relevance sets score `0.0`).
+`tests/fixtures/retrieval_eval.json` is a small hand-labeled
+**sanity-check** dataset — useful for catching regressions, not evidence of
+scientific model quality.
+
+### Testing retrieval offline
+
+All retrieval unit tests use deterministic fake embedders; no model or
+network access is needed:
+
+```bash
+pytest tests/retrieval
+pytest -m "not slow"          # exclude the optional real-model smoke test
+```
+
+The real-model smoke test runs only when the `embed` extra is installed
+(and is marked `slow`).
+
 ## Project layout
 
 ```
 src/paperdna/           Package source (config, logging)
 src/paperdna/corpus/    Corpus schema, validation, normalization, deduplication
-tests/                  Pytest test suite (smoke and corpus tests)
+src/paperdna/retrieval/ Embedding interface, cosine similarity, search index, eval
+tests/                  Pytest test suite (smoke, corpus, retrieval tests)
 tests/fixtures/         Local offline test fixtures
 pyproject.toml          Project metadata, dependencies, and tool config
 .env.example            Example environment configuration
