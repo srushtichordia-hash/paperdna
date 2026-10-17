@@ -4,8 +4,8 @@ An NLP research discovery engine that maps agreement, disagreement, and conditio
 
 > **Status:** early foundation. Repository architecture, configuration, testing,
 > corpus ingestion/validation, semantic retrieval, baseline candidate-claim
-> extraction, and pairwise NLI relationship estimation are in place.
-> Condition-aware analysis, evidence graphs, network ingestion from live
+> extraction, pairwise NLI relationship estimation, and experimental-condition
+> analysis are in place. Evidence graphs, network ingestion from live
 > sources, and the UI are not implemented yet.
 
 ## Requirements
@@ -276,6 +276,68 @@ label; a `neutral` label means "no clear textual relationship", not "the
 claims are unrelated in reality". All NLI output should be treated as
 decision support for human review.
 
+## Experimental conditions
+
+`paperdna.conditions` extracts experimental-condition mentions from candidate
+claims and compares them across two claims — a deterministic, offline,
+stdlib-only baseline of transparent regex rules (no models, no downloads).
+
+- **Categories:** `dataset`, `population`, `model`, `metric`, `setting`,
+  `design` (fixed, documented in `paperdna.conditions.CONDITION_CATEGORIES`).
+- **Traceability:** every `ConditionMention` stores the verbatim matched span
+  with character offsets into the claim's sentence
+  (`sentence[mention.start:mention.end] == mention.value`) and copies the
+  claim's source identity. Conditions are only ever *found* in text — never
+  inferred, completed, or fabricated; categories with no textual support are
+  simply absent.
+- **Ambiguity is flagged, not hidden:** generic wording ("our dataset",
+  "various benchmarks") is extracted with `ambiguous=True` so it cannot be
+  silently treated as comparable.
+- **Comparison statuses** (per category): `matching`, `differing`, `missing`,
+  `uncertain`. **`missing` is not `differing`** — an absent condition means
+  the text does not say, which is *not* evidence that the studies used
+  different conditions. `uncertain` covers ambiguous wording on either side.
+  Normalized (casefolded, whitespace-collapsed) value sets are compared for
+  equality; mentions are deduplicated per field; `stats` counts always sum
+  to the six categories.
+- **Context, never override:** `contextualize_nli` embeds the NLI
+  `PairClassification` unchanged and adds human-readable notes. A
+  contradiction is **never downgraded** to neutral because a condition
+  differs; differences are framed as contextual evidence whose scientific
+  impact requires interpretation.
+- **Evaluation:** `tests/fixtures/conditions_eval.json` is a small
+  hand-labeled **sanity-check** set (matching, conflicting, missing,
+  ambiguous, incomplete) — useful for catching regressions, not evidence of
+  scientific model quality.
+
+```python
+from paperdna.conditions import compare_conditions, contextualize_nli, extract_conditions
+
+premise = extract_conditions(premise_claim)        # CandidateClaim
+hypothesis = extract_conditions(hypothesis_claim)  # CandidateClaim
+comparison = compare_conditions(premise, hypothesis)
+print(comparison.summary)  # e.g. "differing: dataset, metric; missing: population, ..."
+
+result = contextualize_nli(classification, comparison)  # PairClassification
+print(result.classification.label)  # unchanged by conditions
+for note in result.notes:
+    print(note)
+```
+
+### Limitations
+
+Condition extraction is deliberately conservative and incomplete: it is a
+lexical baseline, so paraphrased or unusually phrased conditions are missed
+(false negatives), everyday words can be over-matched (false positives),
+and it cannot resolve coreference ("on it"), abbreviations outside the rule
+lists, or implicit conditions. Even when two claims extract the same
+condition value, that does not prove the underlying experiments are
+identical; a differing condition does **not** prove it explains divergent
+findings — correlation of wording is not causation of scientific
+disagreement. `missing` always means "not stated in the text", never "the
+studies differ". Treat all condition output as auditable context for human
+interpretation, not as an automated verdict.
+
 ## Project layout
 
 ```
@@ -284,7 +346,8 @@ src/paperdna/corpus/    Corpus schema, validation, normalization, deduplication
 src/paperdna/retrieval/ Embedding interface, cosine similarity, search index, eval
 src/paperdna/claims/    Candidate claim extraction (segmentation, cue rules)
 src/paperdna/nli/       Pairwise claim-relationship classification (NLI)
-tests/                  Pytest test suite (smoke, corpus, retrieval, claims, nli tests)
+src/paperdna/conditions/ Experimental-condition extraction and comparison
+tests/                  Pytest test suite (smoke, corpus, retrieval, claims, nli, conditions tests)
 tests/fixtures/         Local offline test fixtures
 pyproject.toml          Project metadata, dependencies, and tool config
 .env.example            Example environment configuration
