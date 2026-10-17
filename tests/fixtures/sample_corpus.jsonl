@@ -1,0 +1,9 @@
+{"source": "arxiv", "source_id": "2101.00001", "title": "Sparse Attention Mechanisms for Long Documents", "abstract": "We study sparse attention mechanisms for modeling long scientific documents and report accuracy and speed trade-offs.", "authors": ["Ada Lovelace", "Grace Hopper"], "published": "2021-01-05", "url": "https://arxiv.org/abs/2101.00001", "doi": "10.1234/ml.001"}
+{"source": "fixture", "source_id": "p002", "title": "  Gradient   Stabilization\nin Deep Networks ", "abstract": "\tA study of gradient\nstabilization  techniques. ", "authors": ["Alan Turing"], "published": "2020"}
+{"source": "fixture", "source_id": "p003", "title": "Benchmarking Retrieval Augmented Generation", "abstract": "We benchmark retrieval augmented generation pipelines across domains.", "authors": ["Katherine Johnson", "Dorothy Vaughan"], "published": "2022-11-30", "url": "https://example.org/papers/rag-benchmark"}
+{"source": "openalex", "source_id": "W1234567", "title": "Sparse Attention for Long Sequences", "abstract": "A re-submitted version of the sparse attention work with different metadata.", "authors": ["Someone Else"], "published": "2021", "doi": "https://doi.org/10.1234/ML.001"}
+{"source": "fixture", "source_id": "p003", "title": "Benchmarking RAG", "abstract": "Same paper re-listed with abbreviated metadata.", "authors": ["Katherine Johnson"], "published": "2022"}
+{"source": "openalex", "source_id": "W7777777", "title": "gradient   stabilization in deep networks", "abstract": "Same paper indexed by a second source.", "authors": ["Alan Turing"], "published": "2020-06-01"}
+{"source": "arxiv", "source_id": "2202.00002", "title": "Missing Abstract Paper", "authors": ["Nobody"], "published": "2022"}
+{"source": "arxiv", "source_id": "2203.00003", "title": "Bad Date Paper", "abstract": "This record has an impossible publication date.", "authors": ["Someone"], "published": "2023-02-30"}
+this line is a bare string, not a JSON object
