@@ -3,10 +3,10 @@
 An NLP research discovery engine that maps agreement, disagreement, and condition-dependent scientific findings.
 
 > **Status:** early foundation. Repository architecture, configuration, testing,
-> corpus ingestion/validation, semantic retrieval, and a baseline candidate-claim
-> extractor are in place. NLI, contradiction detection, condition analysis,
-> knowledge graphs, network ingestion from live sources, and the UI are not
-> implemented yet.
+> corpus ingestion/validation, semantic retrieval, baseline candidate-claim
+> extraction, and pairwise NLI relationship estimation are in place.
+> Condition-aware analysis, evidence graphs, network ingestion from live
+> sources, and the UI are not implemented yet.
 
 ## Requirements
 
@@ -219,6 +219,63 @@ for claim in result.claims:
     print(claim.sentence, claim.hedges)  # exact source text + uncertainty markers
 ```
 
+## Claim relationships (NLI)
+
+`paperdna.nli` estimates the textual relationship between two candidate
+claims: **entailment** (support), **contradiction**, or **neutral**.
+
+- **Model:** [`cross-encoder/nli-deberta-v3-base`](https://huggingface.co/cross-encoder/nli-deberta-v3-base)
+  — Apache-2.0, 184M parameters, 512-token inputs, ~several hundred MB
+  download on first use (cached by Hugging Face). Trained on SNLI +
+  MultiNLI (**general-domain**; scientific claim pairs are
+  out-of-distribution, so expect degraded accuracy versus its reported
+  92.4/90.0 general benchmarks).
+- **Label order is never assumed.** The classifier resolves the model's
+  own `id2label` config (with SciFact-style synonyms like
+  `SUPPORTS`/`REFUTES`/`NOT_ENOUGH_INFO`); the model-card default order
+  applies only when a config declares no labels, and un-mappable labels
+  raise rather than guess.
+- **Premise/hypothesis convention:** `classify_pair(premise, hypothesis)`
+  scores in that direction only — NLI is not symmetric.
+- **Uncertainty is preserved:** every result carries all three scores and
+  its confidence; `uncertain=True` when confidence is below the threshold
+  (default 0.6, a heuristic — softmax scores are **not** calibrated
+  probabilities) or when either claim is hedged. Uncertain pairs keep
+  their label but are flagged for review, never presented as established
+  facts.
+- **Traceability:** both claims' source identities and exact evidence
+  sentences are copied into every `PairClassification`; truncation of long
+  inputs is recorded; sources are never mutated.
+- **Optional dependency:** install with `pip install -e ".[nli]"` (same
+  sentence-transformers stack as the `embed` extra). The model loads only
+  when `CrossEncoderNliClassifier` is instantiated — never at import time
+  or in ordinary tests.
+
+```python
+from paperdna.nli import ClaimPair, CrossEncoderNliClassifier, classify_pair
+
+result = classify_pair(pair.premise, pair.hypothesis, CrossEncoderNliClassifier())
+print(result.label, result.confidence, result.uncertain)
+```
+
+### Evaluation
+
+`classification_report(y_true, y_pred)` reports per-class
+precision/recall/F1 and macro-F1 over the three relationships.
+`tests/fixtures/nli_pairs.json` is a small hand-labeled **sanity-check**
+set (support, contradiction, neutral, hedged, paraphrase, low-confidence
+pairs) — useful for catching regressions, not evidence of model quality.
+
+### Limitations
+
+NLI models estimate *textual* relationships, not scientific truth. Scores
+are uncalibrated; the model is domain-general; hedged or subtle scientific
+claims (qualified support, condition-dependent findings) are handled
+weakly; premise/hypothesis direction matters and reversing it can flip the
+label; a `neutral` label means "no clear textual relationship", not "the
+claims are unrelated in reality". All NLI output should be treated as
+decision support for human review.
+
 ## Project layout
 
 ```
@@ -226,7 +283,8 @@ src/paperdna/           Package source (config, logging)
 src/paperdna/corpus/    Corpus schema, validation, normalization, deduplication
 src/paperdna/retrieval/ Embedding interface, cosine similarity, search index, eval
 src/paperdna/claims/    Candidate claim extraction (segmentation, cue rules)
-tests/                  Pytest test suite (smoke, corpus, retrieval, claims tests)
+src/paperdna/nli/       Pairwise claim-relationship classification (NLI)
+tests/                  Pytest test suite (smoke, corpus, retrieval, claims, nli tests)
 tests/fixtures/         Local offline test fixtures
 pyproject.toml          Project metadata, dependencies, and tool config
 .env.example            Example environment configuration
