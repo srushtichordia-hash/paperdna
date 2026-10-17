@@ -3,8 +3,10 @@
 An NLP research discovery engine that maps agreement, disagreement, and condition-dependent scientific findings.
 
 > **Status:** early foundation. Repository architecture, configuration, testing,
-> and local corpus ingestion/validation are in place. NLP models, network
-> ingestion from live sources, retrieval, and the UI are not implemented yet.
+> corpus ingestion/validation, semantic retrieval, and a baseline candidate-claim
+> extractor are in place. NLI, contradiction detection, condition analysis,
+> knowledge graphs, network ingestion from live sources, and the UI are not
+> implemented yet.
 
 ## Requirements
 
@@ -175,13 +177,56 @@ pytest -m "not slow"          # exclude the optional real-model smoke test
 The real-model smoke test runs only when the `embed` extra is installed
 (and is marked `slow`).
 
+## Claim extraction
+
+`paperdna.claims` extracts **candidate** finding sentences from abstracts
+using a lightweight, fully offline baseline: rule-based sentence
+segmentation (with character-offset traceability) followed by lexical cue
+classification.
+
+- **Selection:** sentences matching finding cues (`we find/show/observe`,
+  `our results suggest/indicate`, `results show`, `is/are associated
+  with`, `we conclude/present`) become candidate claims; sentences matching
+  methods cues (`we trained`, `dataset`, `first,`) or background cues
+  (`previous studies`, `it is known`, `prior work`) are excluded.
+- **Cautious language is preserved:** uncertainty markers (`may`, `suggests`,
+  `appears`, `is associated with`, `consistent with`) are *recorded* on each
+  claim (`hedges`), never removed or upgraded to definitive statements.
+- **Traceability:** every claim stores the verbatim sentence plus character
+  offsets, so `abstract[claim.start:claim.end] == claim.sentence` always
+  holds; source identity (`source`, `source_id`) is copied from the paper
+  record. Records are never mutated and evidence text is never fabricated.
+- **Deterministic and offline:** no models, no network, no downloads.
+- **Evaluation:** `tests/fixtures/claims_eval.json` is a small hand-labeled
+  **sanity-check** set — useful for catching regressions, not evidence of
+  scientific model quality.
+
+### Limitations
+
+This baseline does **not** understand scientific content or truth. It is a
+lexical heuristic: paraphrased findings without the listed cues are missed
+(false negatives), sentences using similar wording are over-selected (false
+positives), and unusual abbreviations or capitalization can cause
+over-/under-segmentation. It cannot distinguish hedged findings from hedged
+background, and it is not a substitute for later NLI- or model-based stages.
+Treat its output as auditable candidates for further analysis.
+
+```python
+from paperdna.claims import extract_claims
+
+result = extract_claims(record)  # record: PaperRecord
+for claim in result.claims:
+    print(claim.sentence, claim.hedges)  # exact source text + uncertainty markers
+```
+
 ## Project layout
 
 ```
 src/paperdna/           Package source (config, logging)
 src/paperdna/corpus/    Corpus schema, validation, normalization, deduplication
 src/paperdna/retrieval/ Embedding interface, cosine similarity, search index, eval
-tests/                  Pytest test suite (smoke, corpus, retrieval tests)
+src/paperdna/claims/    Candidate claim extraction (segmentation, cue rules)
+tests/                  Pytest test suite (smoke, corpus, retrieval, claims tests)
 tests/fixtures/         Local offline test fixtures
 pyproject.toml          Project metadata, dependencies, and tool config
 .env.example            Example environment configuration
