@@ -1,0 +1,69 @@
+{
+  "_comment": "Hand-labeled sanity-check pairs for NLI classification. Synthetic text; labels reflect plausible textual relationships, NOT scientific truth or model quality. expected scores are what the deterministic fake classifier is scripted to produce.",
+  "pairs": [
+    {
+      "name": "support_verbatim_generalization",
+      "premise": {"source": "arxiv", "source_id": "a1", "sentence": "Sparse attention improves long-document classification accuracy by 4.2%.", "hedges": []},
+      "hypothesis": {"source": "fixture", "source_id": "b1", "sentence": "Sparse attention improves long-document classification.", "hedges": []},
+      "expected_label": "entailment",
+      "scripted_scores": {"entailment": 0.92, "contradiction": 0.03, "neutral": 0.05},
+      "expected_uncertain": false
+    },
+    {
+      "name": "support_paraphrase_wording_differs",
+      "premise": {"source": "arxiv", "source_id": "a2", "sentence": "We find that gradient stabilization reduces training instability.", "hedges": []},
+      "hypothesis": {"source": "openalex", "source_id": "b2", "sentence": "Stabilizing gradients makes training more stable.", "hedges": []},
+      "expected_label": "entailment",
+      "scripted_scores": {"entailment": 0.78, "contradiction": 0.07, "neutral": 0.15},
+      "expected_uncertain": false
+    },
+    {
+      "name": "contradiction_opposite_direction",
+      "premise": {"source": "arxiv", "source_id": "a3", "sentence": "Larger models increase inference cost superlinearly.", "hedges": []},
+      "hypothesis": {"source": "fixture", "source_id": "b3", "sentence": "Larger models reduce inference cost.", "hedges": []},
+      "expected_label": "contradiction",
+      "scripted_scores": {"entailment": 0.04, "contradiction": 0.91, "neutral": 0.05},
+      "expected_uncertain": false
+    },
+    {
+      "name": "neutral_unrelated_topics",
+      "premise": {"source": "arxiv", "source_id": "a4", "sentence": "We find that sparse attention improves long-document classification.", "hedges": []},
+      "hypothesis": {"source": "fixture", "source_id": "b4", "sentence": "Protein folding benchmarks show mixed results.", "hedges": []},
+      "expected_label": "neutral",
+      "scripted_scores": {"entailment": 0.18, "contradiction": 0.12, "neutral": 0.70},
+      "expected_uncertain": false
+    },
+    {
+      "name": "hedged_premise_stays_uncertain",
+      "premise": {"source": "arxiv", "source_id": "a5", "sentence": "Our results suggest that the gains may diminish with shorter inputs.", "hedges": ["suggest", "may"]},
+      "hypothesis": {"source": "fixture", "source_id": "b5", "sentence": "The gains diminish with shorter inputs.", "hedges": []},
+      "expected_label": "entailment",
+      "scripted_scores": {"entailment": 0.85, "contradiction": 0.05, "neutral": 0.10},
+      "expected_uncertain": true
+    },
+    {
+      "name": "low_confidence_needs_review",
+      "premise": {"source": "arxiv", "source_id": "a6", "sentence": "Attention mechanisms may help summarization tasks.", "hedges": ["may"]},
+      "hypothesis": {"source": "fixture", "source_id": "b6", "sentence": "Attention is beneficial for summarization.", "hedges": []},
+      "expected_label": "entailment",
+      "scripted_scores": {"entailment": 0.42, "contradiction": 0.31, "neutral": 0.27},
+      "expected_uncertain": true
+    },
+    {
+      "name": "neutral_similar_words_different_claims",
+      "premise": {"source": "arxiv", "source_id": "a7", "sentence": "We observe a significant effect in the validation cohort.", "hedges": []},
+      "hypothesis": {"source": "fixture", "source_id": "b7", "sentence": "A significant effect was reported in a different cohort.", "hedges": []},
+      "expected_label": "neutral",
+      "scripted_scores": {"entailment": 0.33, "contradiction": 0.29, "neutral": 0.38},
+      "expected_uncertain": true
+    },
+    {
+      "name": "contradiction_hedged_premise",
+      "premise": {"source": "arxiv", "source_id": "a8", "sentence": "The method appears not to generalize to low-resource settings.", "hedges": ["appears"]},
+      "hypothesis": {"source": "fixture", "source_id": "b8", "sentence": "The method generalizes well to low-resource settings.", "hedges": []},
+      "expected_label": "contradiction",
+      "scripted_scores": {"entailment": 0.09, "contradiction": 0.74, "neutral": 0.17},
+      "expected_uncertain": true
+    }
+  ]
+}
