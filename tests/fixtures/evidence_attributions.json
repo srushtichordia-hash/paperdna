@@ -1,0 +1,56 @@
+{
+  "_comment": "Hand-labeled sanity-check cases for evidence attribution. Synthetic text; expected verification statuses reflect what the traceability rules should produce, NOT scientific quality.",
+  "cases": [
+    {
+      "name": "verified_pair",
+      "mode": "build",
+      "records": [
+        {"source": "arxiv", "source_id": "2101.00001", "title": "Sparse Attention Studies", "abstract": "We study sparse attention for long documents. We find that accuracy improves on the GLUE benchmark. Prior work is extensive.", "authors": ["A. Author"], "published": "2021-05", "url": "https://arxiv.org/abs/2101.00001", "doi": null},
+        {"source": "fixture", "source_id": "f2", "title": "Vision Findings", "abstract": "Background sentences here. We find that accuracy improves on the ImageNet dataset. Closing remarks.", "authors": ["B. Researcher"], "published": null, "url": "https://example.org/f2", "doi": null}
+      ],
+      "premise": {"source": "arxiv", "source_id": "2101.00001", "sentence": "We find that accuracy improves on the GLUE benchmark."},
+      "hypothesis": {"source": "fixture", "source_id": "f2", "sentence": "We find that accuracy improves on the ImageNet dataset."},
+      "classification": {"premise_source": "arxiv", "premise_source_id": "2101.00001", "premise_text": "We find that accuracy improves on the GLUE benchmark.", "hypothesis_source": "fixture", "hypothesis_source_id": "f2", "hypothesis_text": "We find that accuracy improves on the ImageNet dataset.", "label": "entailment", "scores": {"entailment": 0.8, "contradiction": 0.1, "neutral": 0.1}, "confidence": 0.8, "uncertain": false, "hedged": false, "truncated": false, "model": "fake-nli"},
+      "expected": {"premise_verification": "verified", "hypothesis_verification": "verified", "label": "entailment"}
+    },
+    {
+      "name": "missing_record",
+      "mode": "build",
+      "records": [],
+      "premise": {"source": "arxiv", "source_id": "2101.00001", "sentence": "We find that accuracy improves on the GLUE benchmark."},
+      "hypothesis": {"source": "fixture", "source_id": "f2", "sentence": "We find that accuracy improves on the ImageNet dataset."},
+      "expected": {"premise_verification": "unverified", "hypothesis_verification": "unverified"}
+    },
+    {
+      "name": "missing_url_preserved_as_none",
+      "mode": "build",
+      "records": [
+        {"source": "arxiv", "source_id": "2101.00001", "title": "Sparse Attention Studies", "abstract": "We study sparse attention for long documents. We find that accuracy improves on the GLUE benchmark. Prior work is extensive.", "authors": ["A. Author"], "published": "2021-05", "url": null, "doi": null},
+        {"source": "fixture", "source_id": "f2", "title": "Vision Findings", "abstract": "Background sentences here. We find that accuracy improves on the ImageNet dataset. Closing remarks.", "authors": ["B. Researcher"], "published": null, "url": null, "doi": null}
+      ],
+      "premise": {"source": "arxiv", "source_id": "2101.00001", "sentence": "We find that accuracy improves on the GLUE benchmark."},
+      "hypothesis": {"source": "fixture", "source_id": "f2", "sentence": "We find that accuracy improves on the ImageNet dataset."},
+      "expected": {"premise_verification": "verified", "hypothesis_verification": "verified", "url_is_none": true}
+    },
+    {
+      "name": "empty_evidence_side",
+      "mode": "build",
+      "records": [
+        {"source": "arxiv", "source_id": "2101.00001", "title": "Sparse Attention Studies", "abstract": "We study sparse attention for long documents. We find that accuracy improves on the GLUE benchmark. Prior work is extensive.", "authors": ["A. Author"], "published": "2021-05", "url": null, "doi": null}
+      ],
+      "premise": {"source": "arxiv", "source_id": "2101.00001", "sentence": "We find that accuracy improves on the GLUE benchmark."},
+      "hypothesis": {"source": "fixture", "source_id": "f2", "sentence": ""},
+      "expected": {"premise_verification": "verified", "hypothesis_verification": "unavailable"}
+    },
+    {
+      "name": "repeated_sentence_blocks_offset_inference",
+      "mode": "from_classification",
+      "records": [
+        {"source": "arxiv", "source_id": "2101.00001", "title": "Sparse Attention Studies", "abstract": "We study sparse attention for long documents. We find that accuracy improves on the GLUE benchmark. Prior work is extensive.", "authors": ["A. Author"], "published": "2021-05", "url": null, "doi": null},
+        {"source": "fixture", "source_id": "f2", "title": "Vision Findings", "abstract": "We find that accuracy improves on the ImageNet dataset. Middle text. We find that accuracy improves on the ImageNet dataset.", "authors": ["B. Researcher"], "published": null, "url": null, "doi": null}
+      ],
+      "classification": {"premise_source": "arxiv", "premise_source_id": "2101.00001", "premise_text": "We find that accuracy improves on the GLUE benchmark.", "hypothesis_source": "fixture", "hypothesis_source_id": "f2", "hypothesis_text": "We find that accuracy improves on the ImageNet dataset.", "label": "entailment", "scores": {"entailment": 0.8, "contradiction": 0.1, "neutral": 0.1}, "confidence": 0.8, "uncertain": false, "hedged": false, "truncated": false, "model": "fake-nli"},
+      "expected": {"premise_verification": "verified_by_search", "hypothesis_verification": "unverified"}
+    }
+  ]
+}
