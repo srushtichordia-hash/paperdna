@@ -533,6 +533,59 @@ reports them and queries handle them gracefully. Visualization is
 deliberately out of scope here — the deterministic JSON is designed as
 its input.
 
+## Web application
+
+PaperDNA ships a browser UI (Issue #10) with a FastAPI backend and a
+React + TypeScript frontend. The backend is a thin HTTP layer over the
+existing pipeline — no research logic is duplicated in the frontend, and
+ML models are **optional** and **never downloaded implicitly**.
+
+### Backend (FastAPI)
+
+```bash
+pip install -e ".[api,dev]"          # pulls in fastapi + uvicorn
+uvicorn paperdna.api.app:app --reload --port 8000
+```
+
+Endpoints:
+
+| Method | Path                  | Purpose                                              |
+| ------ | --------------------- | ---------------------------------------------------- |
+| GET    | `/api/health`         | Liveness, corpus stats, model status                 |
+| GET    | `/api/corpus`         | Corpus stats and paper summaries                     |
+| POST   | `/api/analyze`        | Full discovery result for one claim                  |
+| GET    | `/api/models`         | Model availability and load status                   |
+| POST   | `/api/models/load`    | Construct models — **requires `confirmDownload: true`** |
+| POST   | `/api/models/unload`  | Drop loaded models                                   |
+
+`POST /api/models/load` returns `400` unless the body sets
+`confirmDownload: true`; this is the only code path that constructs a
+model. Nothing loads at import or app start.
+
+### Frontend (React + Vite)
+
+```bash
+cd web
+npm install
+npm run dev            # http://localhost:5173, proxies /api to :8000
+```
+
+Other scripts: `npm run build` (type-check + production bundle),
+`npm run typecheck`, `npm test` (Vitest + Testing Library).
+
+### Honesty guarantees
+
+- `rankingKind` is always `semantic` or `lexical`; the UI never presents
+  the lexical fallback as meaning-aware similarity.
+- Relationship labels are model **predictions**, not verified facts; the
+  UI labels them as such and surfaces the "NLI scores are uncalibrated"
+  caveat.
+- Evidence shows its verification status (`verified`, `verified_by_search`,
+  `unverified`, `unavailable`) and offset range; a text-only user claim
+  reports `null` offsets and an `unknown` claim id rather than inventing
+  provenance.
+- Models require an explicit opt-in before any download.
+
 ## Project layout
 
 ```
@@ -544,7 +597,9 @@ src/paperdna/nli/       Pairwise claim-relationship classification (NLI)
 src/paperdna/conditions/ Experimental-condition extraction and comparison
 src/paperdna/evidence/   Evidence attribution and sentence traceability
 src/paperdna/graph/      Research evidence knowledge graph (schema, builder, queries, serialization)
-tests/                  Pytest test suite (smoke, corpus, retrieval, claims, nli, conditions, evidence, graph tests)
+src/paperdna/api/       FastAPI web backend (app factory, schemas, serializers, pipeline orchestration)
+web/                    React + TypeScript + Vite frontend
+tests/                  Pytest test suite (smoke, corpus, retrieval, claims, nli, conditions, evidence, graph, api tests)
 tests/fixtures/         Local offline test fixtures
 pyproject.toml          Project metadata, dependencies, and tool config
 .env.example            Example environment configuration
