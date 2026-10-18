@@ -1,0 +1,87 @@
+{
+  "_comment": "Synthetic offline cases for the knowledge graph, run through the real pipeline (claims -> NLI classification dicts -> evidence attribution -> graph). Expected values describe structural facts the graph must preserve (counts, labels, verification statuses) — NOT scientific quality.",
+  "cases": [
+    {
+      "name": "verified_supporting_pair",
+      "records": [
+        {"source": "arxiv", "source_id": "2101.00001", "title": "Sparse Attention Studies", "abstract": "We study sparse attention for long documents. We find that accuracy improves on the GLUE benchmark. Prior work is extensive.", "authors": ["A. Author"], "published": "2021-05", "url": "https://arxiv.org/abs/2101.00001", "doi": null},
+        {"source": "fixture", "source_id": "f2", "title": "Vision Findings", "abstract": "Background sentences here. We find that accuracy improves on the ImageNet dataset. Closing remarks.", "authors": ["B. Researcher"], "published": null, "url": null, "doi": null}
+      ],
+      "claims": [
+        {"source": "arxiv", "source_id": "2101.00001", "sentence": "We find that accuracy improves on the GLUE benchmark.", "cue": "we find", "hedges": []},
+        {"source": "fixture", "source_id": "f2", "sentence": "We find that accuracy improves on the ImageNet dataset.", "cue": "we find", "hedges": []}
+      ],
+      "classification": {"premise_source": "arxiv", "premise_source_id": "2101.00001", "premise_text": "We find that accuracy improves on the GLUE benchmark.", "hypothesis_source": "fixture", "hypothesis_source_id": "f2", "hypothesis_text": "We find that accuracy improves on the ImageNet dataset.", "label": "entailment", "scores": {"entailment": 0.82, "contradiction": 0.09, "neutral": 0.09}, "confidence": 0.82, "uncertain": false, "hedged": false, "truncated": false, "model": "fake-nli"},
+      "with_conditions": false,
+      "expected": {
+        "node_counts": {"paper": 2, "claim": 2, "evidence": 2, "condition": 0},
+        "edge_counts": {"claim_paper": 2, "claim_evidence": 2, "claim_condition": 0, "claim_relation": 1},
+        "label": "entailment",
+        "role": "supports",
+        "premise_verification": "verified",
+        "hypothesis_verification": "verified",
+        "uncertain": false
+      }
+    },
+    {
+      "name": "contradiction_with_conditions",
+      "records": [
+        {"source": "fixture", "source_id": "f3", "title": "BERT Study", "abstract": "Setup sentence. We find that BERT improves accuracy on the GLUE benchmark. More text.", "authors": ["C. Author"], "published": "2020", "url": "https://example.org/f3", "doi": null},
+        {"source": "fixture", "source_id": "f4", "title": "LSTM Study", "abstract": "Other setup. We find that LSTM degrades accuracy on the ImageNet dataset. End.", "authors": ["D. Author"], "published": null, "url": null, "doi": null}
+      ],
+      "claims": [
+        {"source": "fixture", "source_id": "f3", "sentence": "We find that BERT improves accuracy on the GLUE benchmark.", "cue": "we find", "hedges": []},
+        {"source": "fixture", "source_id": "f4", "sentence": "We find that LSTM degrades accuracy on the ImageNet dataset.", "cue": "we find", "hedges": []}
+      ],
+      "classification": {"premise_source": "fixture", "premise_source_id": "f3", "premise_text": "We find that BERT improves accuracy on the GLUE benchmark.", "hypothesis_source": "fixture", "hypothesis_source_id": "f4", "hypothesis_text": "We find that LSTM degrades accuracy on the ImageNet dataset.", "label": "contradiction", "scores": {"entailment": 0.05, "contradiction": 0.88, "neutral": 0.07}, "confidence": 0.88, "uncertain": false, "hedged": false, "truncated": false, "model": "fake-nli"},
+      "with_conditions": true,
+      "expected": {
+        "label": "contradiction",
+        "role": "contradicts",
+        "premise_verification": "verified",
+        "hypothesis_verification": "verified",
+        "uncertain": false,
+        "has_condition_comparison": true,
+        "expected_condition_mentions": {"fixture:f3": 3, "fixture:f4": 3}
+      }
+    },
+    {
+      "name": "classification_only_unverified",
+      "records": [],
+      "claims": [],
+      "classification": {"premise_source": "arxiv", "premise_source_id": "9999.00002", "premise_text": "We find that the effect holds on the MNIST dataset.", "hypothesis_source": "arxiv", "hypothesis_source_id": "9999.00003", "hypothesis_text": "We find that the effect holds on the CIFAR-10 dataset.", "label": "neutral", "scores": {"entailment": 0.2, "contradiction": 0.25, "neutral": 0.55}, "confidence": 0.55, "uncertain": true, "hedged": false, "truncated": false, "model": "fake-nli"},
+      "with_conditions": false,
+      "expected": {
+        "node_counts": {"paper": 2, "claim": 2, "evidence": 2, "condition": 0},
+        "edge_counts": {"claim_paper": 2, "claim_evidence": 2, "claim_condition": 0, "claim_relation": 1},
+        "label": "neutral",
+        "role": "neutral",
+        "premise_verification": "unverified",
+        "hypothesis_verification": "unverified",
+        "claim_ids_with_unknown_offsets": true,
+        "uncertain": true
+      }
+    },
+    {
+      "name": "hedged_contradiction",
+      "records": [
+        {"source": "arxiv", "source_id": "2101.00001", "title": "Sparse Attention Studies", "abstract": "We study sparse attention for long documents. We find that accuracy improves on the GLUE benchmark. Prior work is extensive.", "authors": ["A. Author"], "published": "2021-05", "url": "https://arxiv.org/abs/2101.00001", "doi": null},
+        {"source": "fixture", "source_id": "f2", "title": "Vision Findings", "abstract": "Background sentences here. We find that accuracy improves on the ImageNet dataset. Closing remarks.", "authors": ["B. Researcher"], "published": null, "url": null, "doi": null}
+      ],
+      "claims": [
+        {"source": "arxiv", "source_id": "2101.00001", "sentence": "We find that accuracy improves on the GLUE benchmark.", "cue": "we find", "hedges": []},
+        {"source": "fixture", "source_id": "f2", "sentence": "We find that accuracy improves on the ImageNet dataset.", "cue": "we find", "hedges": ["may"]}
+      ],
+      "classification": {"premise_source": "arxiv", "premise_source_id": "2101.00001", "premise_text": "We find that accuracy improves on the GLUE benchmark.", "hypothesis_source": "fixture", "hypothesis_source_id": "f2", "hypothesis_text": "We find that accuracy improves on the ImageNet dataset.", "label": "contradiction", "scores": {"entailment": 0.2, "contradiction": 0.65, "neutral": 0.15}, "confidence": 0.65, "uncertain": true, "hedged": true, "truncated": false, "model": "fake-nli"},
+      "with_conditions": false,
+      "expected": {
+        "label": "contradiction",
+        "role": "contradicts",
+        "premise_verification": "verified",
+        "hypothesis_verification": "verified",
+        "uncertain": true,
+        "hedged": true
+      }
+    }
+  ]
+}

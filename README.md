@@ -425,6 +425,114 @@ rule-based extraction feeding this stage remains heuristic (see claim
 extraction limitations); attribution makes its outputs auditable, it does
 not upgrade their quality.
 
+## Research evidence knowledge graph
+
+`paperdna.graph` turns the pipeline's outputs into one navigable,
+validated graph of **papers, claims, evidence sentences, and
+experimental conditions**, with explicit typed relationships. It is
+pure data: deterministic ids, referential integrity, and round-trippable
+JSON — no network calls, no models, no new dependencies.
+
+```python
+from paperdna.graph import build_graph, graph_to_json, graph_from_json
+from paperdna.graph import supporting_relations, contradicting_relations
+
+graph = build_graph(
+    papers=ingestion_result.papers,        # PaperRecord (or PaperRef) iterables
+    claims=all_claims,                     # CandidateClaim iterables
+    attributions=attributions,             # RelationAttribution from paperdna.evidence
+    conditions=[(claim, extracted)],       # (CandidateClaim, ClaimConditions) pairs
+)
+claim_id = "arxiv:2101.00001:27-80"        # a claim node id (see identity below)
+supporting_relations(graph, claim_id)      # -> ((edge, other_claim), ...)
+contradicting_relations(graph, claim_id, direction="both")
+text = graph_to_json(graph)                # deterministic bytes for storage
+graph2 = graph_from_json(text)             # exact round-trip: graph2 == graph
+```
+
+The lower-level `GraphBuilder` offers `add_paper`, `add_claim`,
+`add_claim_ref`, `add_evidence`, `add_claim_conditions`, `add_relation`,
+and `add_attribution` (each idempotent; `build()` validates).
+
+### Schema
+
+Nodes (all immutable, all with deterministic ids):
+
+| Node       | Id format                                            | Carries |
+| ---------- | ---------------------------------------------------- | ------- |
+| `paper`    | `paper:{source.casefold()}:{source_id}`              | title, url, doi, published (each `None`-able), authors (`()` when unknown) |
+| `claim`    | `{source}:{source_id}:{start}-{end}` (offsets part `unknown` when unavailable — same format as `evidence.claim_id_for`) | verbatim sentence, abstract offsets, cue/hedges (`None` when not extracted) |
+| `evidence` | `evidence:{claim_id}`                                | verbatim sentence, verification status, unavailability reason, offsets |
+| `condition`| `condition:{claim_id}:{start}-{end}` (sentence-relative offsets) | category, verbatim value, ambiguous flag, global offsets when known |
+
+Edges (typed, directed where meaningful):
+
+| Edge                | Direction                       | Meaning |
+| ------------------- | ------------------------------- | ------- |
+| `claim_paper`       | claim → paper                   | `EXTRACTED_FROM`: provenance of the claim |
+| `claim_evidence`    | claim → evidence                | `HAS_EVIDENCE`: one observed evidence side |
+| `claim_condition`   | claim → condition               | `HAS_CONDITION`: one extracted condition mention |
+| `claim_relation`    | premise claim → hypothesis claim | `CLAIM_RELATION`: the predicted NLI relationship |
+
+### Relationship semantics: predictions, not facts
+
+A `claim_relation` edge is **model-generated output**: it stores the
+NLI label (`entailment`/`contradiction`/`neutral` — the raw label is
+never renamed), all three softmax scores, confidence, the
+`uncertain`/`hedged`/`truncated` flags, the model name, and — when
+provided — the upstream `ConditionComparison` embedded unchanged.
+Query helpers group by label (`supporting_relations` = entailment,
+`contradicting_relations`, `neutral_relations`); these names describe
+what the *model predicted*, never verified scientific agreement.
+`RELATION_ROLES` documents the label → role mapping. An evidence-only
+attribution (no classification) produces an edge with `label=None`,
+excluded from the label-specific queries. NLI is directional: the edge
+source is the premise, the target the hypothesis.
+
+### Provenance guarantees
+
+- Evidence nodes preserve the exact sentence, the upstream verification
+  status (`verified` / `verified_by_search` / `unverified` /
+  `unavailable`) and the stated `unavailable_reason`; offsets are kept
+  when known and stay `None` (id suffix `unknown`) when not — never
+  guessed.
+- Missing metadata is preserved as missing: paper title/url/doi and
+  claim cue/hedges are `None` (authors `()`) unless an upstream record
+  provided them; a later, richer add *enriches* a stub node
+  (order-independently, never overwriting conflicting values).
+- Confidence scores and condition comparisons ride through unchanged
+  from `paperdna.nli` and `paperdna.conditions`.
+- Ids are stable and insertion-order-independent; re-adding identical
+  data is a no-op; conflicting payloads under an existing id raise
+  `GraphConflictError`; edges referencing nonexistent nodes, wrong
+  endpoint types, or invalid labels/scores raise `GraphValidationError`
+  (listing every problem).
+
+### Serialization
+
+`graph_to_dict` produces a JSON-safe dict (`format`/`version` envelope,
+`nodes`/`edges` lists in canonical order) and `graph_to_json` the
+byte-deterministic text form: equal graphs always serialize identically,
+and `graph_from_dict`/`graph_from_json` round-trip exactly
+(`from(to(g)) == g`). Deserialization is strict: malformed fields,
+unknown types or versions, and id/payload disagreements raise
+`ValueError`; dangling references raise `GraphValidationError`.
+
+### Limitations
+
+The graph is a *textual* evidence map, not a knowledge base of truth:
+NLI labels are uncalibrated model predictions and a `neutral` or
+`contradiction` label is not a scientific verdict. Claim ids depend on
+the current extractor's segmentation (same caveat as evidence
+attribution), and abstracts are not stored in the graph — re-verification
+needs the corpus. Condition nodes exist only for claims whose
+`ClaimConditions` were supplied; a comparison-only edge stores field
+statuses, not mentions. Disconnected components are normal (every
+classified pair forms its own island until linked); `connected_components`
+reports them and queries handle them gracefully. Visualization is
+deliberately out of scope here — the deterministic JSON is designed as
+its input.
+
 ## Project layout
 
 ```
@@ -435,7 +543,8 @@ src/paperdna/claims/    Candidate claim extraction (segmentation, cue rules)
 src/paperdna/nli/       Pairwise claim-relationship classification (NLI)
 src/paperdna/conditions/ Experimental-condition extraction and comparison
 src/paperdna/evidence/   Evidence attribution and sentence traceability
-tests/                  Pytest test suite (smoke, corpus, retrieval, claims, nli, conditions, evidence tests)
+src/paperdna/graph/      Research evidence knowledge graph (schema, builder, queries, serialization)
+tests/                  Pytest test suite (smoke, corpus, retrieval, claims, nli, conditions, evidence, graph tests)
 tests/fixtures/         Local offline test fixtures
 pyproject.toml          Project metadata, dependencies, and tool config
 .env.example            Example environment configuration
