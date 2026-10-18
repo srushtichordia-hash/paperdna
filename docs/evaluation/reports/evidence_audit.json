@@ -1,0 +1,17 @@
+{
+  "kind": "textual_traceability_audit_not_scientific_grounding",
+  "n_attributions": 19,
+  "n_evidence_sides": 38,
+  "n_violations": 0,
+  "sources": {
+    "classification_only_pairs": 7,
+    "unrecorded_pairs": 4,
+    "verified_self_pairs": 8
+  },
+  "verification_counts": {
+    "unverified": 8,
+    "verified": 16,
+    "verified_by_search": 14
+  },
+  "violations": []
+}

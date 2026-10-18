@@ -1,5 +1,5 @@
 {
-  "_comment": "Hand-labeled sanity-check pairs for NLI classification. Synthetic text; labels reflect plausible textual relationships, NOT scientific truth or model quality. expected scores are what the deterministic fake classifier is scripted to produce.",
+  "_comment": "Hand-labeled sanity-check pairs for NLI classification. Synthetic text; labels reflect plausible textual relationships, NOT scientific truth or model quality. expected scores are what the deterministic fake classifier is scripted to produce (plumbing validation only, circular by construction). 'split' separates development pairs (dev) from held-out reporting pairs (test). uncertain = max score < 0.6 or hedges present.",
   "pairs": [
     {
       "name": "support_verbatim_generalization",
@@ -7,7 +7,8 @@
       "hypothesis": {"source": "fixture", "source_id": "b1", "sentence": "Sparse attention improves long-document classification.", "hedges": []},
       "expected_label": "entailment",
       "scripted_scores": {"entailment": 0.92, "contradiction": 0.03, "neutral": 0.05},
-      "expected_uncertain": false
+      "expected_uncertain": false,
+      "split": "dev"
     },
     {
       "name": "support_paraphrase_wording_differs",
@@ -15,7 +16,8 @@
       "hypothesis": {"source": "openalex", "source_id": "b2", "sentence": "Stabilizing gradients makes training more stable.", "hedges": []},
       "expected_label": "entailment",
       "scripted_scores": {"entailment": 0.78, "contradiction": 0.07, "neutral": 0.15},
-      "expected_uncertain": false
+      "expected_uncertain": false,
+      "split": "test"
     },
     {
       "name": "contradiction_opposite_direction",
@@ -23,7 +25,8 @@
       "hypothesis": {"source": "fixture", "source_id": "b3", "sentence": "Larger models reduce inference cost.", "hedges": []},
       "expected_label": "contradiction",
       "scripted_scores": {"entailment": 0.04, "contradiction": 0.91, "neutral": 0.05},
-      "expected_uncertain": false
+      "expected_uncertain": false,
+      "split": "dev"
     },
     {
       "name": "neutral_unrelated_topics",
@@ -31,7 +34,8 @@
       "hypothesis": {"source": "fixture", "source_id": "b4", "sentence": "Protein folding benchmarks show mixed results.", "hedges": []},
       "expected_label": "neutral",
       "scripted_scores": {"entailment": 0.18, "contradiction": 0.12, "neutral": 0.70},
-      "expected_uncertain": false
+      "expected_uncertain": false,
+      "split": "dev"
     },
     {
       "name": "hedged_premise_stays_uncertain",
@@ -39,7 +43,8 @@
       "hypothesis": {"source": "fixture", "source_id": "b5", "sentence": "The gains diminish with shorter inputs.", "hedges": []},
       "expected_label": "entailment",
       "scripted_scores": {"entailment": 0.85, "contradiction": 0.05, "neutral": 0.10},
-      "expected_uncertain": true
+      "expected_uncertain": true,
+      "split": "dev"
     },
     {
       "name": "low_confidence_needs_review",
@@ -47,7 +52,8 @@
       "hypothesis": {"source": "fixture", "source_id": "b6", "sentence": "Attention is beneficial for summarization.", "hedges": []},
       "expected_label": "entailment",
       "scripted_scores": {"entailment": 0.42, "contradiction": 0.31, "neutral": 0.27},
-      "expected_uncertain": true
+      "expected_uncertain": true,
+      "split": "test"
     },
     {
       "name": "neutral_similar_words_different_claims",
@@ -55,7 +61,8 @@
       "hypothesis": {"source": "fixture", "source_id": "b7", "sentence": "A significant effect was reported in a different cohort.", "hedges": []},
       "expected_label": "neutral",
       "scripted_scores": {"entailment": 0.33, "contradiction": 0.29, "neutral": 0.38},
-      "expected_uncertain": true
+      "expected_uncertain": true,
+      "split": "test"
     },
     {
       "name": "contradiction_hedged_premise",
@@ -63,7 +70,152 @@
       "hypothesis": {"source": "fixture", "source_id": "b8", "sentence": "The method generalizes well to low-resource settings.", "hedges": []},
       "expected_label": "contradiction",
       "scripted_scores": {"entailment": 0.09, "contradiction": 0.74, "neutral": 0.17},
-      "expected_uncertain": true
+      "expected_uncertain": true,
+      "split": "test"
+    },
+    {
+      "name": "direction_reversed_not_entailment",
+      "premise": {"source": "arxiv", "source_id": "a9", "sentence": "The model reduces error rate on the test set.", "hedges": []},
+      "hypothesis": {"source": "fixture", "source_id": "b9", "sentence": "The test set reduces error rate on the model.", "hedges": []},
+      "expected_label": "neutral",
+      "scripted_scores": {"entailment": 0.12, "contradiction": 0.21, "neutral": 0.67},
+      "expected_uncertain": false,
+      "split": "dev"
+    },
+    {
+      "name": "numeric_mismatch_contradiction",
+      "premise": {"source": "arxiv", "source_id": "a10", "sentence": "The system achieves 87.3% accuracy on the benchmark.", "hedges": []},
+      "hypothesis": {"source": "fixture", "source_id": "b10", "sentence": "The system achieves 89.3% accuracy on the benchmark.", "hedges": []},
+      "expected_label": "contradiction",
+      "scripted_scores": {"entailment": 0.06, "contradiction": 0.88, "neutral": 0.06},
+      "expected_uncertain": false,
+      "split": "dev"
+    },
+    {
+      "name": "negation_contradiction",
+      "premise": {"source": "arxiv", "source_id": "a11", "sentence": "Regularization did not improve generalization.", "hedges": []},
+      "hypothesis": {"source": "fixture", "source_id": "b11", "sentence": "Regularization improved generalization.", "hedges": []},
+      "expected_label": "contradiction",
+      "scripted_scores": {"entailment": 0.07, "contradiction": 0.86, "neutral": 0.07},
+      "expected_uncertain": false,
+      "split": "dev"
+    },
+    {
+      "name": "synonym_paraphrase_entailment",
+      "premise": {"source": "arxiv", "source_id": "a12", "sentence": "Retrieval augmentation reduces hallucination in question answering.", "hedges": []},
+      "hypothesis": {"source": "fixture", "source_id": "b12", "sentence": "Retrieving passages lowers fabrication in QA systems.", "hedges": []},
+      "expected_label": "entailment",
+      "scripted_scores": {"entailment": 0.81, "contradiction": 0.05, "neutral": 0.14},
+      "expected_uncertain": false,
+      "split": "dev"
+    },
+    {
+      "name": "hedged_hypothesis_uncertain",
+      "premise": {"source": "arxiv", "source_id": "a13", "sentence": "The approach improves sample efficiency.", "hedges": []},
+      "hypothesis": {"source": "fixture", "source_id": "b13", "sentence": "The approach may improve sample efficiency.", "hedges": ["may"]},
+      "expected_label": "entailment",
+      "scripted_scores": {"entailment": 0.83, "contradiction": 0.04, "neutral": 0.13},
+      "expected_uncertain": true,
+      "split": "test"
+    },
+    {
+      "name": "condition_dependent_conflict",
+      "premise": {"source": "arxiv", "source_id": "a14", "sentence": "With large datasets, the method outperforms the baseline.", "hedges": []},
+      "hypothesis": {"source": "fixture", "source_id": "b14", "sentence": "With small datasets, the method outperforms the baseline.", "hedges": []},
+      "expected_label": "neutral",
+      "scripted_scores": {"entailment": 0.22, "contradiction": 0.31, "neutral": 0.47},
+      "expected_uncertain": true,
+      "split": "test"
+    },
+    {
+      "name": "partial_overlap_neutral",
+      "premise": {"source": "arxiv", "source_id": "a15", "sentence": "The model was evaluated on three benchmarks.", "hedges": []},
+      "hypothesis": {"source": "fixture", "source_id": "b15", "sentence": "The model achieved state-of-the-art results.", "hedges": []},
+      "expected_label": "neutral",
+      "scripted_scores": {"entailment": 0.28, "contradiction": 0.19, "neutral": 0.53},
+      "expected_uncertain": true,
+      "split": "test"
+    },
+    {
+      "name": "verbatim_support_identical",
+      "premise": {"source": "arxiv", "source_id": "a16", "sentence": "Error drops by 12% when fine-tuning on the full corpus.", "hedges": []},
+      "hypothesis": {"source": "fixture", "source_id": "b16", "sentence": "Error drops by 12% when fine-tuning on the full corpus.", "hedges": []},
+      "expected_label": "entailment",
+      "scripted_scores": {"entailment": 0.95, "contradiction": 0.02, "neutral": 0.03},
+      "expected_uncertain": false,
+      "split": "test"
+    },
+    {
+      "name": "specific_to_general_entailment",
+      "premise": {"source": "arxiv", "source_id": "a17", "sentence": "The detector achieves 94% precision on city street scenes.", "hedges": []},
+      "hypothesis": {"source": "fixture", "source_id": "b17", "sentence": "The detector performs well in urban environments.", "hedges": []},
+      "expected_label": "entailment",
+      "scripted_scores": {"entailment": 0.76, "contradiction": 0.06, "neutral": 0.18},
+      "expected_uncertain": false,
+      "split": "test"
+    },
+    {
+      "name": "general_to_specific_neutral",
+      "premise": {"source": "arxiv", "source_id": "a18", "sentence": "The detector performs well in urban environments.", "hedges": []},
+      "hypothesis": {"source": "fixture", "source_id": "b18", "sentence": "The detector achieves 94% precision on city street scenes.", "hedges": []},
+      "expected_label": "neutral",
+      "scripted_scores": {"entailment": 0.31, "contradiction": 0.17, "neutral": 0.52},
+      "expected_uncertain": true,
+      "split": "test"
+    },
+    {
+      "name": "temporal_contradiction",
+      "premise": {"source": "arxiv", "source_id": "a19", "sentence": "The effect disappeared after retraining with the new data.", "hedges": []},
+      "hypothesis": {"source": "fixture", "source_id": "b19", "sentence": "The effect persisted after retraining with the new data.", "hedges": []},
+      "expected_label": "contradiction",
+      "scripted_scores": {"entailment": 0.05, "contradiction": 0.90, "neutral": 0.05},
+      "expected_uncertain": false,
+      "split": "test"
+    },
+    {
+      "name": "unrelated_methodology_neutral",
+      "premise": {"source": "arxiv", "source_id": "a20", "sentence": "We trained the model for 30 epochs with early stopping.", "hedges": []},
+      "hypothesis": {"source": "fixture", "source_id": "b20", "sentence": "The dataset was released under a permissive license.", "hedges": []},
+      "expected_label": "neutral",
+      "scripted_scores": {"entailment": 0.11, "contradiction": 0.14, "neutral": 0.75},
+      "expected_uncertain": false,
+      "split": "test"
+    },
+    {
+      "name": "hedge_in_premise_uncertain",
+      "premise": {"source": "arxiv", "source_id": "a21", "sentence": "These findings indicate that the penalty term helps.", "hedges": ["indicate"]},
+      "hypothesis": {"source": "fixture", "source_id": "b21", "sentence": "The penalty term helps.", "hedges": []},
+      "expected_label": "entailment",
+      "scripted_scores": {"entailment": 0.79, "contradiction": 0.06, "neutral": 0.15},
+      "expected_uncertain": true,
+      "split": "test"
+    },
+    {
+      "name": "cross_paper_support_paraphrase",
+      "premise": {"source": "arxiv", "source_id": "a22", "sentence": "Attention sparsity reduces memory use for long documents.", "hedges": []},
+      "hypothesis": {"source": "fixture", "source_id": "b22", "sentence": "Long-document processing becomes cheaper with sparse attention.", "hedges": []},
+      "expected_label": "entailment",
+      "scripted_scores": {"entailment": 0.80, "contradiction": 0.05, "neutral": 0.15},
+      "expected_uncertain": false,
+      "split": "test"
+    },
+    {
+      "name": "statistical_significance_mismatch",
+      "premise": {"source": "arxiv", "source_id": "a23", "sentence": "The improvement was not statistically significant (p = 0.42).", "hedges": []},
+      "hypothesis": {"source": "fixture", "source_id": "b23", "sentence": "The improvement was statistically significant.", "hedges": []},
+      "expected_label": "contradiction",
+      "scripted_scores": {"entailment": 0.08, "contradiction": 0.84, "neutral": 0.08},
+      "expected_uncertain": false,
+      "split": "test"
+    },
+    {
+      "name": "shared_topic_different_finding_neutral",
+      "premise": {"source": "arxiv", "source_id": "a24", "sentence": "Retrieval augmentation improved accuracy on our internal dataset.", "hedges": []},
+      "hypothesis": {"source": "fixture", "source_id": "b24", "sentence": "Retrieval augmentation degraded accuracy on public benchmarks.", "hedges": []},
+      "expected_label": "neutral",
+      "scripted_scores": {"entailment": 0.15, "contradiction": 0.35, "neutral": 0.50},
+      "expected_uncertain": true,
+      "split": "test"
     }
   ]
 }

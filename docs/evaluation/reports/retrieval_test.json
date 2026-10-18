@@ -1,0 +1,330 @@
+{
+  "aggregate_mean": {
+    "precision@1": 1.0,
+    "precision@3": 0.333333,
+    "precision@5": 0.215385,
+    "recall@1": 0.961538,
+    "recall@3": 0.961538,
+    "recall@5": 1.0
+  },
+  "ks": [
+    1,
+    3,
+    5
+  ],
+  "n_papers": 13,
+  "n_queries": 13,
+  "per_query": [
+    {
+      "metrics": {
+        "precision@1": 1.0,
+        "precision@3": 0.3333333333333333,
+        "precision@5": 0.2,
+        "recall@1": 1.0,
+        "recall@3": 1.0,
+        "recall@5": 1.0
+      },
+      "query": "factuality of closed-book question answering with retrieved passages",
+      "relevant": [
+        "demo:p001"
+      ],
+      "retrieved": [
+        "demo:p001",
+        "fixture:p003",
+        "demo:p005"
+      ],
+      "split": "test"
+    },
+    {
+      "metrics": {
+        "precision@1": 1.0,
+        "precision@3": 0.3333333333333333,
+        "precision@5": 0.2,
+        "recall@1": 1.0,
+        "recall@3": 1.0,
+        "recall@5": 1.0
+      },
+      "query": "dense retrieval versus sparse baselines on biomedical search",
+      "relevant": [
+        "demo:p002"
+      ],
+      "retrieved": [
+        "demo:p002",
+        "fixture:p003",
+        "demo:p009",
+        "demo:p006",
+        "arxiv:2101.00001",
+        "demo:p001",
+        "demo:p004",
+        "demo:p007",
+        "demo:p008",
+        "demo:p010"
+      ],
+      "split": "test"
+    },
+    {
+      "metrics": {
+        "precision@1": 1.0,
+        "precision@3": 0.3333333333333333,
+        "precision@5": 0.2,
+        "recall@1": 1.0,
+        "recall@3": 1.0,
+        "recall@5": 1.0
+      },
+      "query": "scaling laws for neural retrievers corpus size model capacity",
+      "relevant": [
+        "demo:p003"
+      ],
+      "retrieved": [
+        "demo:p003",
+        "fixture:p002",
+        "demo:p001"
+      ],
+      "split": "test"
+    },
+    {
+      "metrics": {
+        "precision@1": 1.0,
+        "precision@3": 0.3333333333333333,
+        "precision@5": 0.2,
+        "recall@1": 1.0,
+        "recall@3": 1.0,
+        "recall@5": 1.0
+      },
+      "query": "inter-annotator agreement and nDCG for search evaluation",
+      "relevant": [
+        "demo:p004"
+      ],
+      "retrieved": [
+        "demo:p004",
+        "demo:p002",
+        "demo:p005",
+        "demo:p009",
+        "demo:p010"
+      ],
+      "split": "test"
+    },
+    {
+      "metrics": {
+        "precision@1": 1.0,
+        "precision@3": 0.3333333333333333,
+        "precision@5": 0.2,
+        "recall@1": 1.0,
+        "recall@3": 1.0,
+        "recall@5": 1.0
+      },
+      "query": "answer normalization inflates benchmark validity in question answering",
+      "relevant": [
+        "demo:p005"
+      ],
+      "retrieved": [
+        "demo:p005",
+        "fixture:p003",
+        "demo:p001",
+        "fixture:p002"
+      ],
+      "split": "test"
+    },
+    {
+      "metrics": {
+        "precision@1": 1.0,
+        "precision@3": 0.3333333333333333,
+        "precision@5": 0.2,
+        "recall@1": 1.0,
+        "recall@3": 1.0,
+        "recall@5": 1.0
+      },
+      "query": "contrastive training with hard negatives improves robustness",
+      "relevant": [
+        "demo:p006"
+      ],
+      "retrieved": [
+        "demo:p006",
+        "arxiv:2101.00001",
+        "fixture:p002",
+        "demo:p001",
+        "demo:p009"
+      ],
+      "split": "test"
+    },
+    {
+      "metrics": {
+        "precision@1": 1.0,
+        "precision@3": 0.3333333333333333,
+        "precision@5": 0.2,
+        "recall@1": 1.0,
+        "recall@3": 1.0,
+        "recall@5": 1.0
+      },
+      "query": "failure cases of retrieval augmentation on multi-hop scientific questions",
+      "relevant": [
+        "demo:p007"
+      ],
+      "retrieved": [
+        "demo:p007",
+        "demo:p001",
+        "arxiv:2101.00001",
+        "fixture:p003",
+        "demo:p002",
+        "demo:p004",
+        "demo:p006",
+        "demo:p008",
+        "demo:p009",
+        "demo:p010"
+      ],
+      "split": "test"
+    },
+    {
+      "metrics": {
+        "precision@1": 1.0,
+        "precision@3": 0.3333333333333333,
+        "precision@5": 0.2,
+        "recall@1": 1.0,
+        "recall@3": 1.0,
+        "recall@5": 1.0
+      },
+      "query": "product quantization for billion-scale retrieval indexes",
+      "relevant": [
+        "demo:p008"
+      ],
+      "retrieved": [
+        "demo:p008",
+        "fixture:p003",
+        "demo:p001",
+        "demo:p002",
+        "demo:p004",
+        "demo:p006",
+        "demo:p007",
+        "demo:p009",
+        "demo:p010"
+      ],
+      "split": "test"
+    },
+    {
+      "metrics": {
+        "precision@1": 1.0,
+        "precision@3": 0.3333333333333333,
+        "precision@5": 0.2,
+        "recall@1": 1.0,
+        "recall@3": 1.0,
+        "recall@5": 1.0
+      },
+      "query": "cross-lingual retrieval for low-resource languages",
+      "relevant": [
+        "demo:p009"
+      ],
+      "retrieved": [
+        "demo:p009",
+        "demo:p004",
+        "fixture:p003",
+        "demo:p001",
+        "demo:p002",
+        "demo:p006",
+        "demo:p007",
+        "demo:p008",
+        "demo:p010"
+      ],
+      "split": "test"
+    },
+    {
+      "metrics": {
+        "precision@1": 1.0,
+        "precision@3": 0.3333333333333333,
+        "precision@5": 0.2,
+        "recall@1": 1.0,
+        "recall@3": 1.0,
+        "recall@5": 1.0
+      },
+      "query": "reproducibility of information retrieval experiments seeds and hyperparameters",
+      "relevant": [
+        "demo:p010"
+      ],
+      "retrieved": [
+        "demo:p010",
+        "fixture:p003",
+        "demo:p001",
+        "demo:p002",
+        "demo:p004",
+        "demo:p006",
+        "demo:p007",
+        "demo:p008",
+        "demo:p009"
+      ],
+      "split": "test"
+    },
+    {
+      "metrics": {
+        "precision@1": 1.0,
+        "precision@3": 0.3333333333333333,
+        "precision@5": 0.2,
+        "recall@1": 1.0,
+        "recall@3": 1.0,
+        "recall@5": 1.0
+      },
+      "query": "memory and latency tradeoffs in large-scale search indexes",
+      "relevant": [
+        "demo:p008"
+      ],
+      "retrieved": [
+        "demo:p008",
+        "demo:p002",
+        "demo:p009"
+      ],
+      "split": "test"
+    },
+    {
+      "metrics": {
+        "precision@1": 1.0,
+        "precision@3": 0.3333333333333333,
+        "precision@5": 0.4,
+        "recall@1": 0.5,
+        "recall@3": 0.5,
+        "recall@5": 1.0
+      },
+      "query": "dense retrievers for scientific literature domain adaptation",
+      "relevant": [
+        "demo:p002",
+        "demo:p006"
+      ],
+      "retrieved": [
+        "demo:p002",
+        "arxiv:2101.00001",
+        "fixture:p003",
+        "demo:p003",
+        "demo:p006",
+        "demo:p007",
+        "demo:p009"
+      ],
+      "split": "test"
+    },
+    {
+      "metrics": {
+        "precision@1": 1.0,
+        "precision@3": 0.3333333333333333,
+        "precision@5": 0.2,
+        "recall@1": 1.0,
+        "recall@3": 1.0,
+        "recall@5": 1.0
+      },
+      "query": "similar distractors reduce the gains of retrieval augmentation",
+      "relevant": [
+        "demo:p001"
+      ],
+      "retrieved": [
+        "demo:p001",
+        "demo:p006",
+        "demo:p007",
+        "fixture:p003",
+        "demo:p002",
+        "demo:p004",
+        "demo:p008",
+        "demo:p009",
+        "demo:p010"
+      ],
+      "split": "test"
+    }
+  ],
+  "ranking_kind": "lexical",
+  "scores_are_calibrated": false,
+  "system": "lexical"
+}

@@ -1,0 +1,231 @@
+{
+  "agreement": 1.0,
+  "kind": "correctness_check_not_quality_score",
+  "n_pairs": 6,
+  "n_pairs_matching": 6,
+  "per_pair": [
+    {
+      "match": true,
+      "name": "matching_dataset_and_metric",
+      "per_category": {
+        "dataset": {
+          "actual": "matching",
+          "expected": "matching",
+          "match": true
+        },
+        "design": {
+          "actual": "missing",
+          "expected": "missing",
+          "match": true
+        },
+        "metric": {
+          "actual": "matching",
+          "expected": "matching",
+          "match": true
+        },
+        "model": {
+          "actual": "uncertain",
+          "expected": "uncertain",
+          "match": true
+        },
+        "population": {
+          "actual": "missing",
+          "expected": "missing",
+          "match": true
+        },
+        "setting": {
+          "actual": "missing",
+          "expected": "missing",
+          "match": true
+        }
+      },
+      "split": "dev"
+    },
+    {
+      "match": true,
+      "name": "conflicting_dataset_and_metric",
+      "per_category": {
+        "dataset": {
+          "actual": "differing",
+          "expected": "differing",
+          "match": true
+        },
+        "design": {
+          "actual": "missing",
+          "expected": "missing",
+          "match": true
+        },
+        "metric": {
+          "actual": "differing",
+          "expected": "differing",
+          "match": true
+        },
+        "model": {
+          "actual": "uncertain",
+          "expected": "uncertain",
+          "match": true
+        },
+        "population": {
+          "actual": "missing",
+          "expected": "missing",
+          "match": true
+        },
+        "setting": {
+          "actual": "missing",
+          "expected": "missing",
+          "match": true
+        }
+      },
+      "split": "dev"
+    },
+    {
+      "match": true,
+      "name": "missing_population_is_not_differing",
+      "per_category": {
+        "dataset": {
+          "actual": "missing",
+          "expected": "missing",
+          "match": true
+        },
+        "design": {
+          "actual": "missing",
+          "expected": "missing",
+          "match": true
+        },
+        "metric": {
+          "actual": "missing",
+          "expected": "missing",
+          "match": true
+        },
+        "model": {
+          "actual": "missing",
+          "expected": "missing",
+          "match": true
+        },
+        "population": {
+          "actual": "missing",
+          "expected": "missing",
+          "match": true
+        },
+        "setting": {
+          "actual": "missing",
+          "expected": "missing",
+          "match": true
+        }
+      },
+      "split": "dev"
+    },
+    {
+      "match": true,
+      "name": "ambiguous_wording",
+      "per_category": {
+        "dataset": {
+          "actual": "uncertain",
+          "expected": "uncertain",
+          "match": true
+        },
+        "design": {
+          "actual": "missing",
+          "expected": "missing",
+          "match": true
+        },
+        "metric": {
+          "actual": "missing",
+          "expected": "missing",
+          "match": true
+        },
+        "model": {
+          "actual": "uncertain",
+          "expected": "uncertain",
+          "match": true
+        },
+        "population": {
+          "actual": "missing",
+          "expected": "missing",
+          "match": true
+        },
+        "setting": {
+          "actual": "missing",
+          "expected": "missing",
+          "match": true
+        }
+      },
+      "split": "dev"
+    },
+    {
+      "match": true,
+      "name": "incomplete_claim_side",
+      "per_category": {
+        "dataset": {
+          "actual": "missing",
+          "expected": "missing",
+          "match": true
+        },
+        "design": {
+          "actual": "missing",
+          "expected": "missing",
+          "match": true
+        },
+        "metric": {
+          "actual": "missing",
+          "expected": "missing",
+          "match": true
+        },
+        "model": {
+          "actual": "missing",
+          "expected": "missing",
+          "match": true
+        },
+        "population": {
+          "actual": "missing",
+          "expected": "missing",
+          "match": true
+        },
+        "setting": {
+          "actual": "missing",
+          "expected": "missing",
+          "match": true
+        }
+      },
+      "split": "dev"
+    },
+    {
+      "match": true,
+      "name": "matching_design_setting_metric",
+      "per_category": {
+        "dataset": {
+          "actual": "missing",
+          "expected": "missing",
+          "match": true
+        },
+        "design": {
+          "actual": "matching",
+          "expected": "matching",
+          "match": true
+        },
+        "metric": {
+          "actual": "matching",
+          "expected": "matching",
+          "match": true
+        },
+        "model": {
+          "actual": "uncertain",
+          "expected": "uncertain",
+          "match": true
+        },
+        "population": {
+          "actual": "missing",
+          "expected": "missing",
+          "match": true
+        },
+        "setting": {
+          "actual": "matching",
+          "expected": "matching",
+          "match": true
+        }
+      },
+      "split": "dev"
+    }
+  ],
+  "system": "rule-baseline"
+}

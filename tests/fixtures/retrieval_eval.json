@@ -1,38 +1,186 @@
 {
-  "_comment": "Hand-labeled sanity-check dataset for retrieval ranking. Small and subjective; useful for catching regressions, NOT evidence of scientific model quality.",
+  "_comment": "Hand-labeled sanity-check benchmark for retrieval ranking. Synthetic papers and queries; labels reflect topical relevance judged from title/abstract text, NOT scientific quality. Papers are self-contained (the benchmark does not depend on other fixtures). 'anchor' queries share distinctive tokens with their relevant paper and must rank it first under any token-overlap ranker. 'split' separates development queries (dev) from held-out reporting queries (test).",
   "papers": [
     {
       "id": "arxiv:2101.00001",
       "title": "Sparse Attention Mechanisms for Long Documents",
-      "abstract": "We study sparse attention mechanisms for modeling long scientific documents and report accuracy and speed trade-offs."
+      "abstract": "We study sparse attention mechanisms for modeling long scientific documents. Sparse attention improves long-document classification accuracy."
     },
     {
       "id": "fixture:p002",
-      "title": "Gradient Stabilization in Deep Networks",
-      "abstract": "A study of gradient stabilization techniques."
+      "title": "Gradient Stabilization in Deep Neural Networks",
+      "abstract": "We study gradient clipping and normalization for stabilizing deep network training."
     },
     {
       "id": "fixture:p003",
       "title": "Benchmarking Retrieval Augmented Generation",
-      "abstract": "We benchmark retrieval augmented generation pipelines across domains."
+      "abstract": "A benchmark comparing dense and sparse retrieval variants for retrieval augmented generation question answering."
+    },
+    {
+      "id": "demo:p001",
+      "title": "Retrieval Augmentation Improves Fact Retrieval in Language Models",
+      "abstract": "Retrieval augmentation improves fact retrieval in closed-book question answering. Retrieved passages reduce hallucination, but the gains depend on corpus quality. Similar distractors can erase the improvement."
+    },
+    {
+      "id": "demo:p002",
+      "title": "Dense Retrieval Outperforms BM25 on Domain-Specific Search",
+      "abstract": "Dense retrieval outperforms sparse baselines on biomedical search benchmarks. The margin shrinks when queries use rare technical terms."
+    },
+    {
+      "id": "demo:p003",
+      "title": "Scaling Laws for Neural Retrievers",
+      "abstract": "We study scaling laws for neural retrievers. Performance follows a power law in corpus size and model capacity."
+    },
+    {
+      "id": "demo:p004",
+      "title": "Evaluating Retrieval Systems with Judgment Lists",
+      "abstract": "Human relevance judgments remain the standard for evaluating retrieval systems. Inter-annotator agreement is often low."
+    },
+    {
+      "id": "demo:p005",
+      "title": "Answer Normalization Hurts Benchmark Validity in Question Answering",
+      "abstract": "Answer normalization inflates benchmark scores in question answering. We show that evaluation details can dominate measured progress."
+    },
+    {
+      "id": "demo:p006",
+      "title": "Contrastive Training Improves Dense Retrieval Robustness",
+      "abstract": "Contrastive training with hard negatives improves dense retrieval robustness. Gains hold across distribution shifts."
+    },
+    {
+      "id": "demo:p007",
+      "title": "Retrieval Augmentation Fails on Multi-Hop Scientific Questions",
+      "abstract": "Retrieval augmentation fails on multi-hop scientific questions that require composing evidence across papers."
+    },
+    {
+      "id": "demo:p008",
+      "title": "Efficient Index Compression for Billion-Scale Retrieval",
+      "abstract": "We compress retrieval indexes with product quantization, reducing memory while preserving recall at billion scale."
+    },
+    {
+      "id": "demo:p009",
+      "title": "Multilingual Dense Retrieval for Low-Resource Languages",
+      "abstract": "Multilingual dense retrieval improves cross-lingual search for low-resource languages."
+    },
+    {
+      "id": "demo:p010",
+      "title": "Reproducibility Gaps in Information Retrieval Research",
+      "abstract": "Reproducibility gaps are common in information retrieval research. Seeds, hyperparameters, and evaluation protocols are often underreported."
     }
   ],
   "queries": [
     {
       "query": "sparse attention for long sequences",
-      "relevant": ["arxiv:2101.00001"]
+      "relevant": ["arxiv:2101.00001"],
+      "split": "dev",
+      "anchor": true
     },
     {
       "query": "stabilizing gradients in deep networks",
-      "relevant": ["fixture:p002"]
+      "relevant": ["fixture:p002"],
+      "split": "dev",
+      "anchor": true
     },
     {
       "query": "evaluating retrieval augmented generation systems",
-      "relevant": ["fixture:p003"]
+      "relevant": ["fixture:p003"],
+      "split": "dev",
+      "anchor": true
     },
     {
       "query": "attention mechanisms",
-      "relevant": ["arxiv:2101.00001"]
+      "relevant": ["arxiv:2101.00001"],
+      "split": "dev",
+      "anchor": true
+    },
+    {
+      "query": "retrieval augmentation improves fact retrieval in language models",
+      "relevant": ["demo:p001"],
+      "split": "dev",
+      "anchor": false
+    },
+    {
+      "query": "human relevance judgments for evaluating retrieval systems",
+      "relevant": ["demo:p004"],
+      "split": "dev",
+      "anchor": false
+    },
+    {
+      "query": "factuality of closed-book question answering with retrieved passages",
+      "relevant": ["demo:p001"],
+      "split": "test",
+      "anchor": false
+    },
+    {
+      "query": "dense retrieval versus sparse baselines on biomedical search",
+      "relevant": ["demo:p002"],
+      "split": "test",
+      "anchor": false
+    },
+    {
+      "query": "scaling laws for neural retrievers corpus size model capacity",
+      "relevant": ["demo:p003"],
+      "split": "test",
+      "anchor": false
+    },
+    {
+      "query": "inter-annotator agreement and nDCG for search evaluation",
+      "relevant": ["demo:p004"],
+      "split": "test",
+      "anchor": false
+    },
+    {
+      "query": "answer normalization inflates benchmark validity in question answering",
+      "relevant": ["demo:p005"],
+      "split": "test",
+      "anchor": false
+    },
+    {
+      "query": "contrastive training with hard negatives improves robustness",
+      "relevant": ["demo:p006"],
+      "split": "test",
+      "anchor": false
+    },
+    {
+      "query": "failure cases of retrieval augmentation on multi-hop scientific questions",
+      "relevant": ["demo:p007"],
+      "split": "test",
+      "anchor": false
+    },
+    {
+      "query": "product quantization for billion-scale retrieval indexes",
+      "relevant": ["demo:p008"],
+      "split": "test",
+      "anchor": false
+    },
+    {
+      "query": "cross-lingual retrieval for low-resource languages",
+      "relevant": ["demo:p009"],
+      "split": "test",
+      "anchor": false
+    },
+    {
+      "query": "reproducibility of information retrieval experiments seeds and hyperparameters",
+      "relevant": ["demo:p010"],
+      "split": "test",
+      "anchor": false
+    },
+    {
+      "query": "memory and latency tradeoffs in large-scale search indexes",
+      "relevant": ["demo:p008"],
+      "split": "test",
+      "anchor": false
+    },
+    {
+      "query": "dense retrievers for scientific literature domain adaptation",
+      "relevant": ["demo:p002", "demo:p006"],
+      "split": "test",
+      "anchor": false
+    },
+    {
+      "query": "similar distractors reduce the gains of retrieval augmentation",
+      "relevant": ["demo:p001"],
+      "split": "test",
+      "anchor": false
     }
   ]
 }
