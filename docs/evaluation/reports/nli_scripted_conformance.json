@@ -1,0 +1,333 @@
+{
+  "circular": true,
+  "circular_note": "Scripted scores were authored from the gold labels; agreement here validates pipeline plumbing only and is NOT a model-quality metric.",
+  "classifier": "scripted-fixture",
+  "labels": [
+    "entailment",
+    "contradiction",
+    "neutral"
+  ],
+  "overall": {
+    "accuracy": 1.0,
+    "macro_f1": 1.0,
+    "per_class": {
+      "contradiction": {
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "support": 6.0
+      },
+      "entailment": {
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "support": 10.0
+      },
+      "neutral": {
+        "f1": 1.0,
+        "precision": 1.0,
+        "recall": 1.0,
+        "support": 8.0
+      }
+    },
+    "total": 24,
+    "uncertain_rate": 0.416667
+  },
+  "per_pair": [
+    {
+      "confidence": 0.92,
+      "gold": "entailment",
+      "match": true,
+      "name": "support_verbatim_generalization",
+      "predicted": "entailment",
+      "split": "dev",
+      "uncertain": false,
+      "uncertain_match": true
+    },
+    {
+      "confidence": 0.78,
+      "gold": "entailment",
+      "match": true,
+      "name": "support_paraphrase_wording_differs",
+      "predicted": "entailment",
+      "split": "test",
+      "uncertain": false,
+      "uncertain_match": true
+    },
+    {
+      "confidence": 0.91,
+      "gold": "contradiction",
+      "match": true,
+      "name": "contradiction_opposite_direction",
+      "predicted": "contradiction",
+      "split": "dev",
+      "uncertain": false,
+      "uncertain_match": true
+    },
+    {
+      "confidence": 0.7,
+      "gold": "neutral",
+      "match": true,
+      "name": "neutral_unrelated_topics",
+      "predicted": "neutral",
+      "split": "dev",
+      "uncertain": false,
+      "uncertain_match": true
+    },
+    {
+      "confidence": 0.85,
+      "gold": "entailment",
+      "match": true,
+      "name": "hedged_premise_stays_uncertain",
+      "predicted": "entailment",
+      "split": "dev",
+      "uncertain": true,
+      "uncertain_match": true
+    },
+    {
+      "confidence": 0.42,
+      "gold": "entailment",
+      "match": true,
+      "name": "low_confidence_needs_review",
+      "predicted": "entailment",
+      "split": "test",
+      "uncertain": true,
+      "uncertain_match": true
+    },
+    {
+      "confidence": 0.38,
+      "gold": "neutral",
+      "match": true,
+      "name": "neutral_similar_words_different_claims",
+      "predicted": "neutral",
+      "split": "test",
+      "uncertain": true,
+      "uncertain_match": true
+    },
+    {
+      "confidence": 0.74,
+      "gold": "contradiction",
+      "match": true,
+      "name": "contradiction_hedged_premise",
+      "predicted": "contradiction",
+      "split": "test",
+      "uncertain": true,
+      "uncertain_match": true
+    },
+    {
+      "confidence": 0.67,
+      "gold": "neutral",
+      "match": true,
+      "name": "direction_reversed_not_entailment",
+      "predicted": "neutral",
+      "split": "dev",
+      "uncertain": false,
+      "uncertain_match": true
+    },
+    {
+      "confidence": 0.88,
+      "gold": "contradiction",
+      "match": true,
+      "name": "numeric_mismatch_contradiction",
+      "predicted": "contradiction",
+      "split": "dev",
+      "uncertain": false,
+      "uncertain_match": true
+    },
+    {
+      "confidence": 0.86,
+      "gold": "contradiction",
+      "match": true,
+      "name": "negation_contradiction",
+      "predicted": "contradiction",
+      "split": "dev",
+      "uncertain": false,
+      "uncertain_match": true
+    },
+    {
+      "confidence": 0.81,
+      "gold": "entailment",
+      "match": true,
+      "name": "synonym_paraphrase_entailment",
+      "predicted": "entailment",
+      "split": "dev",
+      "uncertain": false,
+      "uncertain_match": true
+    },
+    {
+      "confidence": 0.83,
+      "gold": "entailment",
+      "match": true,
+      "name": "hedged_hypothesis_uncertain",
+      "predicted": "entailment",
+      "split": "test",
+      "uncertain": true,
+      "uncertain_match": true
+    },
+    {
+      "confidence": 0.47,
+      "gold": "neutral",
+      "match": true,
+      "name": "condition_dependent_conflict",
+      "predicted": "neutral",
+      "split": "test",
+      "uncertain": true,
+      "uncertain_match": true
+    },
+    {
+      "confidence": 0.53,
+      "gold": "neutral",
+      "match": true,
+      "name": "partial_overlap_neutral",
+      "predicted": "neutral",
+      "split": "test",
+      "uncertain": true,
+      "uncertain_match": true
+    },
+    {
+      "confidence": 0.95,
+      "gold": "entailment",
+      "match": true,
+      "name": "verbatim_support_identical",
+      "predicted": "entailment",
+      "split": "test",
+      "uncertain": false,
+      "uncertain_match": true
+    },
+    {
+      "confidence": 0.76,
+      "gold": "entailment",
+      "match": true,
+      "name": "specific_to_general_entailment",
+      "predicted": "entailment",
+      "split": "test",
+      "uncertain": false,
+      "uncertain_match": true
+    },
+    {
+      "confidence": 0.52,
+      "gold": "neutral",
+      "match": true,
+      "name": "general_to_specific_neutral",
+      "predicted": "neutral",
+      "split": "test",
+      "uncertain": true,
+      "uncertain_match": true
+    },
+    {
+      "confidence": 0.9,
+      "gold": "contradiction",
+      "match": true,
+      "name": "temporal_contradiction",
+      "predicted": "contradiction",
+      "split": "test",
+      "uncertain": false,
+      "uncertain_match": true
+    },
+    {
+      "confidence": 0.75,
+      "gold": "neutral",
+      "match": true,
+      "name": "unrelated_methodology_neutral",
+      "predicted": "neutral",
+      "split": "test",
+      "uncertain": false,
+      "uncertain_match": true
+    },
+    {
+      "confidence": 0.79,
+      "gold": "entailment",
+      "match": true,
+      "name": "hedge_in_premise_uncertain",
+      "predicted": "entailment",
+      "split": "test",
+      "uncertain": true,
+      "uncertain_match": true
+    },
+    {
+      "confidence": 0.8,
+      "gold": "entailment",
+      "match": true,
+      "name": "cross_paper_support_paraphrase",
+      "predicted": "entailment",
+      "split": "test",
+      "uncertain": false,
+      "uncertain_match": true
+    },
+    {
+      "confidence": 0.84,
+      "gold": "contradiction",
+      "match": true,
+      "name": "statistical_significance_mismatch",
+      "predicted": "contradiction",
+      "split": "test",
+      "uncertain": false,
+      "uncertain_match": true
+    },
+    {
+      "confidence": 0.5,
+      "gold": "neutral",
+      "match": true,
+      "name": "shared_topic_different_finding_neutral",
+      "predicted": "neutral",
+      "split": "test",
+      "uncertain": true,
+      "uncertain_match": true
+    }
+  ],
+  "per_split": {
+    "dev": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "per_class": {
+        "contradiction": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 3.0
+        },
+        "entailment": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 3.0
+        },
+        "neutral": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 2.0
+        }
+      },
+      "total": 8,
+      "uncertain_rate": 0.125
+    },
+    "test": {
+      "accuracy": 1.0,
+      "macro_f1": 1.0,
+      "per_class": {
+        "contradiction": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 3.0
+        },
+        "entailment": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 7.0
+        },
+        "neutral": {
+          "f1": 1.0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "support": 6.0
+        }
+      },
+      "total": 16,
+      "uncertain_rate": 0.5625
+    }
+  },
+  "threshold": 0.6
+}

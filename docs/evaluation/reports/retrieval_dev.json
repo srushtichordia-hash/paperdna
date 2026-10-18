@@ -1,0 +1,157 @@
+{
+  "aggregate_mean": {
+    "precision@1": 1.0,
+    "precision@3": 0.333333,
+    "precision@5": 0.2,
+    "recall@1": 1.0,
+    "recall@3": 1.0,
+    "recall@5": 1.0
+  },
+  "ks": [
+    1,
+    3,
+    5
+  ],
+  "n_papers": 13,
+  "n_queries": 6,
+  "per_query": [
+    {
+      "metrics": {
+        "precision@1": 1.0,
+        "precision@3": 0.3333333333333333,
+        "precision@5": 0.2,
+        "recall@1": 1.0,
+        "recall@3": 1.0,
+        "recall@5": 1.0
+      },
+      "query": "sparse attention for long sequences",
+      "relevant": [
+        "arxiv:2101.00001"
+      ],
+      "retrieved": [
+        "arxiv:2101.00001",
+        "fixture:p003",
+        "demo:p002"
+      ],
+      "split": "dev"
+    },
+    {
+      "metrics": {
+        "precision@1": 1.0,
+        "precision@3": 0.3333333333333333,
+        "precision@5": 0.2,
+        "recall@1": 1.0,
+        "recall@3": 1.0,
+        "recall@5": 1.0
+      },
+      "query": "stabilizing gradients in deep networks",
+      "relevant": [
+        "fixture:p002"
+      ],
+      "retrieved": [
+        "fixture:p002"
+      ],
+      "split": "dev"
+    },
+    {
+      "metrics": {
+        "precision@1": 1.0,
+        "precision@3": 0.3333333333333333,
+        "precision@5": 0.2,
+        "recall@1": 1.0,
+        "recall@3": 1.0,
+        "recall@5": 1.0
+      },
+      "query": "evaluating retrieval augmented generation systems",
+      "relevant": [
+        "fixture:p003"
+      ],
+      "retrieved": [
+        "fixture:p003",
+        "demo:p004",
+        "demo:p001",
+        "demo:p002",
+        "demo:p006",
+        "demo:p007",
+        "demo:p008",
+        "demo:p009",
+        "demo:p010"
+      ],
+      "split": "dev"
+    },
+    {
+      "metrics": {
+        "precision@1": 1.0,
+        "precision@3": 0.3333333333333333,
+        "precision@5": 0.2,
+        "recall@1": 1.0,
+        "recall@3": 1.0,
+        "recall@5": 1.0
+      },
+      "query": "attention mechanisms",
+      "relevant": [
+        "arxiv:2101.00001"
+      ],
+      "retrieved": [
+        "arxiv:2101.00001"
+      ],
+      "split": "dev"
+    },
+    {
+      "metrics": {
+        "precision@1": 1.0,
+        "precision@3": 0.3333333333333333,
+        "precision@5": 0.2,
+        "recall@1": 1.0,
+        "recall@3": 1.0,
+        "recall@5": 1.0
+      },
+      "query": "retrieval augmentation improves fact retrieval in language models",
+      "relevant": [
+        "demo:p001"
+      ],
+      "retrieved": [
+        "demo:p001",
+        "demo:p006",
+        "demo:p007",
+        "demo:p009",
+        "arxiv:2101.00001",
+        "fixture:p003",
+        "demo:p002",
+        "demo:p004",
+        "demo:p008",
+        "demo:p010"
+      ],
+      "split": "dev"
+    },
+    {
+      "metrics": {
+        "precision@1": 1.0,
+        "precision@3": 0.3333333333333333,
+        "precision@5": 0.2,
+        "recall@1": 1.0,
+        "recall@3": 1.0,
+        "recall@5": 1.0
+      },
+      "query": "human relevance judgments for evaluating retrieval systems",
+      "relevant": [
+        "demo:p004"
+      ],
+      "retrieved": [
+        "demo:p004",
+        "fixture:p003",
+        "demo:p001",
+        "demo:p002",
+        "demo:p006",
+        "demo:p007",
+        "demo:p008",
+        "demo:p009",
+        "demo:p010"
+      ],
+      "split": "dev"
+    }
+  ],
+  "ranking_kind": "lexical",
+  "scores_are_calibrated": false,
+  "system": "lexical"
+}

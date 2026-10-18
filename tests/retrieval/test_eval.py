@@ -6,8 +6,8 @@ from pathlib import Path
 import pytest
 
 from paperdna.corpus import ingest_records, load_jsonl
-from paperdna.retrieval import PaperIndex, precision_at_k, recall_at_k, record_to_text
-from tests.retrieval.conftest import FakeEmbedder
+from paperdna.eval import evaluate_retrieval, lexical_rank, load_retrieval_benchmark
+from paperdna.retrieval import precision_at_k, recall_at_k, record_to_text
 
 EVAL_PATH = Path(__file__).parent.parent / "fixtures" / "retrieval_eval.json"
 CORPUS_PATH = Path(__file__).parent.parent / "fixtures" / "sample_corpus.jsonl"
@@ -79,11 +79,12 @@ class TestRecallAtK:
 
 
 class TestEvalFixture:
-    """Run the hand-labeled sanity-check set through a deterministic fake.
+    """Structural and end-to-end checks on the labeled benchmark.
 
-    The fake maps each query to the exact embedding of its top paper when
-    the query shares its distinctive tokens, making the expected winner
-    deterministic without any model.
+    The benchmark is self-contained (papers + queries in one file) and
+    measured with the app's real lexical fallback; anchor queries share
+    distinctive tokens with their labeled paper, so token-overlap
+    ranking must put that paper first.
     """
 
     def load_eval(self) -> dict:
@@ -91,39 +92,69 @@ class TestEvalFixture:
 
     def test_fixture_shape(self):
         data = self.load_eval()
-        assert len(data["queries"]) >= 3
+        assert len(data["papers"]) >= 10
+        assert len(data["queries"]) >= 12
         paper_ids = {paper["id"] for paper in data["papers"]}
         for item in data["queries"]:
             assert item["relevant"], "every sanity query needs a label"
             assert set(item["relevant"]) <= paper_ids
+            assert item["split"] in ("dev", "test")
 
     def test_fixture_describes_itself_as_sanity_check(self):
         assert "sanity" in self.load_eval()["_comment"]
 
-    def test_perfect_retrieval_scores_one(self):
+    def test_splits_are_disjoint_and_nonempty(self):
         data = self.load_eval()
-        embedder = FakeEmbedder()
-        index = PaperIndex.build(
-            ingest_records(load_jsonl(str(CORPUS_PATH))).papers, embedder
-        )
-        # Sanity: fixture paper ids correspond to fixture corpus records.
-        corpus_ids = {f"{p.source}:{p.source_id}" for p in index.records}
-        assert {p["id"] for p in data["papers"]} <= corpus_ids
-
-        precisions = []
+        by_split: dict[str, list[str]] = {}
         for item in data["queries"]:
-            results = index.search(item["query"], top_k=len(index.records))
-            retrieved = [f"{r.record.source}:{r.record.source_id}" for r in results]
-            precisions.append(precision_at_k(retrieved, item["relevant"], 1))
-            assert recall_at_k(retrieved, item["relevant"], len(retrieved)) > 0
-        # FakeEmbedder is token-overlap based; every labeled query shares
-        # its distinctive tokens with its labeled paper, so P@1 = 1.0 here.
-        assert precisions == [1.0] * len(precisions)
+            by_split.setdefault(item["split"], []).append(item["query"])
+        assert by_split.get("dev") and by_split.get("test")
+        assert not set(by_split["dev"]) & set(by_split["test"])
+
+    def test_benchmark_is_self_contained(self):
+        records, queries = load_retrieval_benchmark(EVAL_PATH)
+        data = self.load_eval()
+        loaded_ids = {f"{r.source}:{r.source_id}" for r in records}
+        assert loaded_ids == {p["id"] for p in data["papers"]}
+        assert len(queries) == len(data["queries"])
+
+    def test_anchor_queries_rank_their_paper_first(self):
+        records, queries = load_retrieval_benchmark(EVAL_PATH)
+        anchors = [q for q in queries if q.anchor]
+        assert anchors, "the benchmark must keep token-anchored sanity queries"
+        for item in anchors:
+            retrieved = lexical_rank(item.query, records)
+            assert precision_at_k(retrieved, item.relevant, 1) == 1.0, item.query
+
+    def test_every_query_retrieves_a_relevant_paper(self):
+        records, queries = load_retrieval_benchmark(EVAL_PATH)
+        for item in queries:
+            retrieved = lexical_rank(item.query, records)
+            assert retrieved, f"lexical baseline returned nothing for {item.query!r}"
+            assert (
+                recall_at_k(retrieved, item.relevant, len(retrieved)) > 0
+            ), item.query
+
+    def test_lexical_report_is_deterministic_and_bounded(self):
+        records, queries = load_retrieval_benchmark(EVAL_PATH)
+        run = evaluate_retrieval(
+            records, queries, lexical_rank, system="lexical", ranking_kind="lexical"
+        )
+        again = evaluate_retrieval(
+            records, queries, lexical_rank, system="lexical", ranking_kind="lexical"
+        )
+        assert run == again
+        assert run["ranking_kind"] == "lexical"
+        for row in run["per_query"]:
+            for value in row["metrics"].values():
+                assert 0.0 <= value <= 1.0
+        n = len(run["per_query"])
+        for key, value in run["aggregate_mean"].items():
+            mean = sum(r["metrics"][key] for r in run["per_query"]) / n
+            assert value == pytest.approx(mean, abs=1e-6)
 
     def test_preprocessing_is_deterministic_on_fixture(self):
-        data = self.load_eval()
         records = ingest_records(load_jsonl(str(CORPUS_PATH))).papers
         texts = [record_to_text(p) for p in records]
         assert texts == [record_to_text(p) for p in records]
         assert all(isinstance(t, str) and t for t in texts)
-        assert len(data["papers"]) == 3
